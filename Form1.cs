@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Stock_Analysis
 {
@@ -38,6 +39,8 @@ namespace Stock_Analysis
             //MessageBox.Show(odf.FileName);
             txtfile_address.Text = odf.FileName;
             lblStatus.Text = "讀取中";
+            FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read,FileShare.None);
+            StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
             
 
         }
