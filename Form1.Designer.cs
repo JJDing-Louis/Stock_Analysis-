@@ -30,7 +30,6 @@ namespace Stock_Analysis
         private void InitializeComponent()
         {
             this.txtfile_address = new System.Windows.Forms.TextBox();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.btnStockSearch = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
@@ -39,6 +38,7 @@ namespace Stock_Analysis
             this.dGV_List = new System.Windows.Forms.DataGridView();
             this.dGV_Items = new System.Windows.Forms.DataGridView();
             this.dGV_StockRank = new System.Windows.Forms.DataGridView();
+            this.wwwwwwwwwwwwwwwwwwwwwww = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_List)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_Items)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_StockRank)).BeginInit();
@@ -50,13 +50,6 @@ namespace Stock_Analysis
             this.txtfile_address.Name = "txtfile_address";
             this.txtfile_address.Size = new System.Drawing.Size(661, 22);
             this.txtfile_address.TabIndex = 0;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(12, 40);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(661, 22);
-            this.txtSearch.TabIndex = 1;
             // 
             // btnOpenFile
             // 
@@ -130,11 +123,20 @@ namespace Stock_Analysis
             this.dGV_StockRank.Size = new System.Drawing.Size(242, 493);
             this.dGV_StockRank.TabIndex = 9;
             // 
+            // wwwwwwwwwwwwwwwwwwwwwww
+            // 
+            this.wwwwwwwwwwwwwwwwwwwwwww.FormattingEnabled = true;
+            this.wwwwwwwwwwwwwwwwwwwwwww.Location = new System.Drawing.Point(12, 42);
+            this.wwwwwwwwwwwwwwwwwwwwwww.Name = "wwwwwwwwwwwwwwwwwwwwwww";
+            this.wwwwwwwwwwwwwwwwwwwwwww.Size = new System.Drawing.Size(661, 20);
+            this.wwwwwwwwwwwwwwwwwwwwwww.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1109, 584);
+            this.Controls.Add(this.wwwwwwwwwwwwwwwwwwwwwww);
             this.Controls.Add(this.dGV_StockRank);
             this.Controls.Add(this.dGV_Items);
             this.Controls.Add(this.dGV_List);
@@ -143,7 +145,6 @@ namespace Stock_Analysis
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnStockSearch);
             this.Controls.Add(this.btnOpenFile);
-            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.txtfile_address);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -158,7 +159,6 @@ namespace Stock_Analysis
         #endregion
 
         private System.Windows.Forms.TextBox txtfile_address;
-        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnOpenFile;
         private System.Windows.Forms.Button btnStockSearch;
         private System.Windows.Forms.Label lblStatus;
@@ -167,6 +167,7 @@ namespace Stock_Analysis
         private System.Windows.Forms.DataGridView dGV_List;
         private System.Windows.Forms.DataGridView dGV_Items;
         private System.Windows.Forms.DataGridView dGV_StockRank;
+        private System.Windows.Forms.ComboBox wwwwwwwwwwwwwwwwwwwwwww;
     }
 }
 

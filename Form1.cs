@@ -37,6 +37,7 @@ namespace Stock_Analysis
         {
             //MessageBox.Show(odf.FileName);
             txtfile_address.Text = odf.FileName;
+            lblStatus.Text = "讀取中";
             
 
         }
