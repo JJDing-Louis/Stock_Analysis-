@@ -8,3 +8,13 @@ D:\Personal-Work-Space\C# Project\Stock_Analysis\obj\Debug\Stock_Analysis.csproj
 D:\Personal-Work-Space\C# Project\Stock_Analysis\obj\Debug\Stock_Analysis.csproj.CoreCompileInputs.cache
 D:\Personal-Work-Space\C# Project\Stock_Analysis\obj\Debug\Stock_Analysis.exe
 D:\Personal-Work-Space\C# Project\Stock_Analysis\obj\Debug\Stock_Analysis.pdb
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\bin\Debug\Stock_Analysis.exe.config
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\bin\Debug\Stock_Analysis.exe
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\bin\Debug\Stock_Analysis.pdb
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.csprojAssemblyReference.cache
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.Form1.resources
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.Properties.Resources.resources
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.csproj.GenerateResource.cache
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.csproj.CoreCompileInputs.cache
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.exe
+D:\Personal-Work-Space\C# Project\Stock_Analysis-\obj\Debug\Stock_Analysis.pdb
