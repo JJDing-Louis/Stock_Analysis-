@@ -12,9 +12,17 @@ namespace Stock_Analysis
 {
     public partial class Form1 : Form
     {
+        OpenFileDialog odf = new OpenFileDialog();
+
         public Form1()
         {
             InitializeComponent();
+
+        }
+
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            odf.ShowDialog();
         }
     }
 }
