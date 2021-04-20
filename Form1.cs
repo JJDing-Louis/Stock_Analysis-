@@ -8,14 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Data.SqlClient;
 
 namespace Stock_Analysis
 {
     public partial class Form1 : Form
     {
         OpenFileDialog odf = new OpenFileDialog();
-        String fileAdress;
-
+        string fileAdress;
+        string content;
         public Form1()
         {
             InitializeComponent();
@@ -41,7 +42,26 @@ namespace Stock_Analysis
             lblStatus.Text = "讀取中";
             FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read,FileShare.None);
             StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
-            
+            //以下為讀取資料
+            content = sr.ReadToEnd();//讀取整個csv檔
+            //MessageBox.Show(content);顯示內容
+            //MessageBox.Show(content.Split('\n')[0]);顯示第一行
+            //以下建立欄位
+            List<string> column_Name = new List<string>(content.Split('\n')[0].Split(','));
+            for (int i = 0; i < column_Name.Count; i++)
+            {
+                dGV_List.Columns.Add(string.Empty,column_Name[i]);
+            }
+
+            int row = content.Split('\n').Length;//計算列數
+            int column = content.Split('\n')[0].Split(',').Length;//計算欄數
+            string[] detail= new string[column];
+            for (int i = 1; i < row; i++)
+            {
+                detail = content.Split('\n')[i].Split(',');
+                dGV_List.Rows.Add(detail);
+            }
+
 
         }
 
