@@ -48,6 +48,8 @@ namespace Stock_Analysis
             //MessageBox.Show(content.Split('\n')[0]);顯示第一行
             //以下建立欄位
             List<string> column_Name = new List<string>(content.Split('\n')[0].Split(','));
+            
+
             for (int i = 0; i < column_Name.Count; i++)
             {
                 dGV_List.Columns.Add(string.Empty,column_Name[i]);
@@ -55,7 +57,24 @@ namespace Stock_Analysis
 
             int row = content.Split('\n').Length;//計算列數
             int column = content.Split('\n')[0].Split(',').Length;//計算欄數
+            string[] row_content = content.Split('\n');
             string[] detail= new string[column];
+            string[,] content_matrix = new string[row, column];
+            string[] content_detail ;
+            for (int i = 0; i < row; i++)
+            {
+                content_detail = row_content[i].Split(',');
+                for (int j = 0; j < column; j++)
+                {
+                    content_matrix[i,j] = content_detail[j];
+                }
+
+            }
+
+
+
+
+
             for (int i = 1; i < row; i++)
             {
                 detail = content.Split('\n')[i].Split(',');
