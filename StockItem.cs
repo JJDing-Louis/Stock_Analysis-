@@ -1,17 +1,18 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Stock_Analysis
 {
     internal class StockItem
     {
-        private int DealDate;
-        private string StockID;
-        private string StockName;
-        private int SecBrokerID;
-        private string SecBrokerName;
-        private int Price;
-        private int BuyQty;
-        private int CellQty;
+        private string DealDate { get;}
+        private string StockID { get; }
+        private string StockName { get; }
+        private string SecBrokerID { get; }
+        private string SecBrokerName { get; }
+        private string Price { get; }
+        private string BuyQty { get; }
+        private string CellQty { get; }
 
         /*public StockItem(int DealDate, string StockID, string StockName, int SecBrokerID, string SecBrokerName, int Price, int BuyQty, int CellQty)
         {
@@ -24,16 +25,50 @@ namespace Stock_Analysis
             this.BuyQty = BuyQty;
             this.CellQty = CellQty;
         }*/
-        public StockItem(ArrayList Data)
+        public StockItem(string data)
         {
-            this.DealDate = (int)Data[0];
-            this.StockID = (string)Data[1];
-            this.StockName = (string)Data[2];
-            this.SecBrokerID = (int)Data[3];
-            this.SecBrokerName = (string)Data[4];
-            this.Price = (int)Data[5];
-            this.BuyQty = (int)Data[6];
-            this.CellQty = (int)Data[7];
+            List<string> Data = new List<string>(data.Split(','));//改array測試
+            DealDate = Data[0];
+            StockID = Data[1];
+            StockName = Data[2];
+            SecBrokerID = Data[3];
+            SecBrokerName = Data[4];
+            Price = Data[5];
+            BuyQty = Data[6];
+            CellQty = Data[7];
+        }
+
+        public string[] getStockItem()
+        {
+            string[] data = new string[] {DealDate, StockID, StockName, SecBrokerID, SecBrokerName, Price, BuyQty, CellQty};
+            return data;
+         }
+
+        public void getBuyTotal()
+        {
+        
+
+            
+        }
+
+        public void getCellTotal()
+        {
+
+        }
+
+        public void getAvgPrice()
+        {
+
+        }
+
+        public void getBuyCellOver()
+        {
+
+        }
+
+        public void getSecBrokerCnt()
+        {
+
         }
 
     }

@@ -16,7 +16,16 @@ namespace Stock_Analysis
     {
         OpenFileDialog odf = new OpenFileDialog();
         string fileAdress;
+        //string stockItem;
         string content;
+        string columnName;
+        StockItem stock;
+
+
+        BindingList<string[]> stockData = new BindingList<string[]>(); //建立List
+
+
+
         public Form1()
         {
             InitializeComponent();
@@ -42,6 +51,55 @@ namespace Stock_Analysis
             lblStatus.Text = "讀取中";
             FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read,FileShare.None);
             StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
+
+            //建立欄位名稱
+            columnName = sr.ReadLine();
+            //以下建立欄位
+            List<string> column_Name = new List<string>(columnName.Split(','));
+            for (int i = 0; i < column_Name.Count; i++)
+            {
+                dGV_List.Columns.Add(string.Empty, column_Name[i]);
+            } //改用array測試
+            /*columnName.Split(',')
+                      .Select(data => data.Trim())
+                      .ToList()
+                      .ForEach(data => dGV_List.Columns.Add(string.Empty, data));*/
+
+            for (int i = 0; i < 1426428; i++)
+            {
+               string stockContent = sr.ReadLine();
+                if (stockContent == null)
+                {
+                    break;
+                }
+                stock = new StockItem(stockContent);
+                stockData.Add(stock.getStockItem());
+                //dGV_List.Rows.Add(stock.getStockItem());
+               
+            }
+
+            //dGV_List.DataSource = stockData.ToList<string[]>;
+            //dGV_List.DataMember=stockData[0][0];
+
+            /*
+            while (true)
+            {
+                stockItem = sr.ReadLine();
+                if (stockItem == null)
+                {
+                    break;
+                }                
+                stock = new StockItem(stockItem);
+                stockData.Add(stock);
+                dGV_List.Rows.Add(stock.getStockItem());
+            }*/
+
+
+
+
+
+
+            /*舊寫法
             //以下為讀取資料
             content = sr.ReadToEnd();//讀取整個csv檔
             //MessageBox.Show(content);顯示內容
@@ -81,7 +139,7 @@ namespace Stock_Analysis
                 dGV_List.Rows.Add(detail);
             }
 
-
+            */
         }
 
         private void btnOpenFile_Click(object sender, EventArgs e)
