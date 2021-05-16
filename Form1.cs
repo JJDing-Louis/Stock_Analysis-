@@ -1,30 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Diagnostics;
 using System.IO;
-using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace Stock_Analysis
 {
     public partial class Form1 : Form
     {
-        OpenFileDialog odf = new OpenFileDialog();
-        string fileAdress;
-        //string stockItem;
-        //string content;
-        string columnName;
-        //StockItem stock;
-
-
-        BindingList<string[]> stockData = new BindingList<string[]>(); //建立List
-        DataTable dt = new DataTable("StockTable"); //建立ＤataTable
-
+        private OpenFileDialog odf = new OpenFileDialog();
+        private string fileAdress;
+        private string columnName;
+        private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
 
         public Form1()
         {
@@ -46,10 +34,14 @@ namespace Stock_Analysis
 
         private void odf_FileOk(object sender, CancelEventArgs e)
         {
+            //開始計時
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             //MessageBox.Show(odf.FileName);
             txtfile_address.Text = odf.FileName;
             lblStatus.Text = "讀取中";
-            FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read,FileShare.None);
+            FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read, FileShare.None);
             StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
 
             //建立欄位名稱
@@ -69,22 +61,6 @@ namespace Stock_Analysis
                       .ToList()
                       .ForEach(data => dGV_List.Columns.Add(string.Empty, data));*/
 
-
-
-
-            /*for (int i = 0; i < 10; i++)
-            {
-                string stockContent = sr.ReadLine();
-                StockItem stock = new StockItem(stockContent);
-                DataRow row = dt.NewRow();
-                for (int j = 0; j < column_Name.Length; j++)
-                {
-                    row[column_Name[j]] = stock.getStockItem()[j];
-                }
-                dt.Rows.Add(row);
-
-            }*/
-
             while (true)
             {
                 string stockContent = sr.ReadLine();
@@ -101,27 +77,34 @@ namespace Stock_Analysis
                 dt.Rows.Add(row);
             }
 
-            /*for (int i = 0; i < 1426428; i++)
-            {
-                string stockContent = sr.ReadLine();
-                if (stockContent == null)
-                {
-                    break;
-                }
-                stock = new StockItem(stockContent);
-                stockData.Add(stock.getStockItem());
-                //dGV_List.Rows.Add(stock.getStockItem());              
-            }*/
-
             dGV_List.DataSource = dt;
+            sw.Stop();
+            TimeSpan ts_dGV_List = sw.Elapsed;
 
+            //combobox
+            sw.Restart();
+            cbm_stocklist.DisplayMember = $"{column_Name[1]}";
+            cbm_stocklist.ValueMember = $"{column_Name[2]}";
 
+            cbm_stocklist.DataSource = dt;
+            sw.Stop();
+            TimeSpan ts_cbm_stocklist = sw.Elapsed;
 
+            //txt修改
+            lblStatus.Text = "讀檔完成";
+
+            //richbox修改
+            rtxt_ProcessStatus.Text = $"讀取時間: {ts_dGV_List}\nComboBox產生時間: {ts_cbm_stocklist}";
         }
 
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             odf.ShowDialog();
+        }
+
+        private void cbm_stocklist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

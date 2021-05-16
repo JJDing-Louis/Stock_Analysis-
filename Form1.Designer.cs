@@ -38,7 +38,7 @@ namespace Stock_Analysis
             this.dGV_List = new System.Windows.Forms.DataGridView();
             this.dGV_Items = new System.Windows.Forms.DataGridView();
             this.dGV_StockRank = new System.Windows.Forms.DataGridView();
-            this.wwwwwwwwwwwwwwwwwwwwwww = new System.Windows.Forms.ComboBox();
+            this.cbm_stocklist = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_List)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_Items)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_StockRank)).BeginInit();
@@ -123,20 +123,21 @@ namespace Stock_Analysis
             this.dGV_StockRank.Size = new System.Drawing.Size(242, 493);
             this.dGV_StockRank.TabIndex = 9;
             // 
-            // wwwwwwwwwwwwwwwwwwwwwww
+            // cbm_stocklist
             // 
-            this.wwwwwwwwwwwwwwwwwwwwwww.FormattingEnabled = true;
-            this.wwwwwwwwwwwwwwwwwwwwwww.Location = new System.Drawing.Point(12, 42);
-            this.wwwwwwwwwwwwwwwwwwwwwww.Name = "wwwwwwwwwwwwwwwwwwwwwww";
-            this.wwwwwwwwwwwwwwwwwwwwwww.Size = new System.Drawing.Size(661, 20);
-            this.wwwwwwwwwwwwwwwwwwwwwww.TabIndex = 10;
+            this.cbm_stocklist.FormattingEnabled = true;
+            this.cbm_stocklist.Location = new System.Drawing.Point(12, 42);
+            this.cbm_stocklist.Name = "cbm_stocklist";
+            this.cbm_stocklist.Size = new System.Drawing.Size(661, 20);
+            this.cbm_stocklist.TabIndex = 10;
+            this.cbm_stocklist.SelectedIndexChanged += new System.EventHandler(this.cbm_stocklist_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1109, 584);
-            this.Controls.Add(this.wwwwwwwwwwwwwwwwwwwwwww);
+            this.Controls.Add(this.cbm_stocklist);
             this.Controls.Add(this.dGV_StockRank);
             this.Controls.Add(this.dGV_Items);
             this.Controls.Add(this.dGV_List);
@@ -167,7 +168,7 @@ namespace Stock_Analysis
         private System.Windows.Forms.DataGridView dGV_List;
         private System.Windows.Forms.DataGridView dGV_Items;
         private System.Windows.Forms.DataGridView dGV_StockRank;
-        private System.Windows.Forms.ComboBox wwwwwwwwwwwwwwwwwwwwwww;
+        private System.Windows.Forms.ComboBox cbm_stocklist;
     }
 }
 
