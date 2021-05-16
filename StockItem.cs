@@ -27,7 +27,8 @@ namespace Stock_Analysis
         }*/
         public StockItem(string data)
         {
-            List<string> Data = new List<string>(data.Split(','));//改array測試
+            //List<string> Data = new List<string>(data.Split(','));//改array測試
+            string[] Data = data.Split(',');
             DealDate = Data[0];
             StockID = Data[1];
             StockName = Data[2];
