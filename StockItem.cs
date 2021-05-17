@@ -5,14 +5,14 @@ namespace Stock_Analysis
 {
     internal class StockItem
     {
-        private string DealDate { get;}
-        private string StockID { get; }
-        private string StockName { get; }
-        private string SecBrokerID { get; }
-        private string SecBrokerName { get; }
-        private string Price { get; }
-        private string BuyQty { get; }
-        private string CellQty { get; }
+        public string DealDate { get;}
+        public string StockID { get; }
+        public string StockName { get; }
+        public string SecBrokerID { get; }
+        public string SecBrokerName { get; }
+        public string Price { get; }
+        public string BuyQty { get; }
+        public string CellQty { get; }
 
         /*public StockItem(int DealDate, string StockID, string StockName, int SecBrokerID, string SecBrokerName, int Price, int BuyQty, int CellQty)
         {

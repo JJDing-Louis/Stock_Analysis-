@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -12,7 +13,8 @@ namespace Stock_Analysis
         private OpenFileDialog odf = new OpenFileDialog();
         private string fileAdress;
         private string columnName;
-        private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
+        //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
+        private List<StockItem> dt = new List<StockItem>();
 
         public Form1()
         {
@@ -45,22 +47,17 @@ namespace Stock_Analysis
             StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
 
             //建立欄位名稱
-            columnName = sr.ReadLine();
+            columnName = sr.ReadLine(); //(思考其他寫法)
             //以下建立欄位
-            //List<string> column_Name = new List<string>(columnName.Split(','));
-            String[] column_Name = columnName.Split(',');
-            for (int i = 0; i < column_Name.Length; i++)
+            string stockContent = sr.ReadLine();
+            while (!string.IsNullOrWhiteSpace(stockContent))
             {
-                //dGV_List.Columns.Add(string.Empty, column_Name[i]);
-                dt.Columns.Add(column_Name[i]);
+                StockItem stock = new StockItem(stockContent);
+                dt.Add(stock);
+                stockContent = sr.ReadLine();
             }
-
-            //改用array測試
-            /*columnName.Split(',')
-                      .Select(data => data.Trim())
-                      .ToList()
-                      .ForEach(data => dGV_List.Columns.Add(string.Empty, data));*/
-
+            dGV_List.DataSource = dt;
+            /*
             while (true)
             {
                 string stockContent = sr.ReadLine();
@@ -75,18 +72,15 @@ namespace Stock_Analysis
                     row[column_Name[j]] = stock.getStockItem()[j];
                 }
                 dt.Rows.Add(row);
-            }
+            }*/
 
-            dGV_List.DataSource = dt;
             sw.Stop();
             TimeSpan ts_dGV_List = sw.Elapsed;
 
             //combobox
             sw.Restart();
-            cbm_stocklist.DisplayMember = $"{column_Name[1]}";
-            cbm_stocklist.ValueMember = $"{column_Name[2]}";
+            //cbm_stocklist.DataSource = dt; (ComboBox的問題在想一下，運行較久)
 
-            cbm_stocklist.DataSource = dt;
             sw.Stop();
             TimeSpan ts_cbm_stocklist = sw.Elapsed;
 
