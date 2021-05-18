@@ -69,6 +69,7 @@ namespace Stock_Analysis
             this.btnStockSearch.TabIndex = 3;
             this.btnStockSearch.Text = "股票查詢";
             this.btnStockSearch.UseVisualStyleBackColor = true;
+            this.btnStockSearch.Click += new System.EventHandler(this.btnStockSearch_Click);
             // 
             // lblStatus
             // 

@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace Stock_Analysis
 {
@@ -15,6 +16,8 @@ namespace Stock_Analysis
         private string columnName;
         //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
         private List<StockItem> dt = new List<StockItem>();
+        StockItem stock;
+        Object selected_Stock;
 
         public Form1()
         {
@@ -52,7 +55,7 @@ namespace Stock_Analysis
             string stockContent = sr.ReadLine();
             while (!string.IsNullOrWhiteSpace(stockContent))
             {
-                StockItem stock = new StockItem(stockContent);
+                stock = new StockItem(stockContent);
                 dt.Add(stock);
                 stockContent = sr.ReadLine();
             }
@@ -79,7 +82,30 @@ namespace Stock_Analysis
 
             //combobox
             sw.Restart();
-            //cbm_stocklist.DataSource = dt; (ComboBox的問題在想一下，運行較久)
+
+            //建立combolist
+            List<string> stocklist = new List<string>();
+            Hashtable htb = new Hashtable();
+            foreach (StockItem item in dt)
+            {
+                if (htb.Contains(item.StockID))
+                {
+                    continue;
+                }
+                htb.Add(item.StockID, item.StockName);
+            }
+            foreach (DictionaryEntry item in htb)
+            {
+                string name = $"{item.Key} - {item.Value}";
+                stocklist.Add(name);
+            }
+            cbm_stocklist.DataSource = stocklist;
+
+            //cbm_stocklist.SelectedIndex = -1;
+
+
+            //cbm_stocklist.DataSource = dt; //(ComboBox的問題在想一下，運行較久)
+            //cbm_stocklist.DisplayMember = 
 
             sw.Stop();
             TimeSpan ts_cbm_stocklist = sw.Elapsed;
@@ -89,6 +115,8 @@ namespace Stock_Analysis
 
             //richbox修改
             rtxt_ProcessStatus.Text = $"讀取時間: {ts_dGV_List}\nComboBox產生時間: {ts_cbm_stocklist}";
+
+            
         }
 
         private void btnOpenFile_Click(object sender, EventArgs e)
@@ -98,7 +126,27 @@ namespace Stock_Analysis
 
         private void cbm_stocklist_SelectedIndexChanged(object sender, EventArgs e)
         {
+             selected_Stock = cbm_stocklist.SelectedItem;
+            MessageBox.Show($"{selected_Stock.ToString()}");
+        }
 
+        private void btnStockSearch_Click(object sender, EventArgs e)
+        {   
+            //以下為搜尋方法
+            String[] stock_Detail = selected_Stock.ToString().Split(' ');
+            int stockID = int.Parse(stock_Detail[0]);
+            string stockName = stock_Detail[2];
+            MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}"); //測試搜尋訊息正確
+        }
+
+
+        //建立搜尋方法
+        public void stock_Search(Object selected_Stock)
+        {
+            //String[] stock_Detail = selected_Stock.ToString().Split(' ');
+            //int stockID = int.Parse(stock_Detail[0]);
+            //string stockName = stock_Detail[2];
+            //MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}");
         }
     }
 }
