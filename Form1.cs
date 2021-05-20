@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using System.Collections;
 
 namespace Stock_Analysis
 {
@@ -14,10 +13,12 @@ namespace Stock_Analysis
         private OpenFileDialog odf = new OpenFileDialog();
         private string fileAdress;
         private string columnName;
+
         //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
-        private List<StockItem> dt = new List<StockItem>();
-        StockItem stock;
-        Object selected_Stock;
+        private List<StockItem> dt = new List<StockItem>(); //建立股票的所有資料，以List建立
+
+        private StockItem stock;
+        private Object selected_Stock;
 
         public Form1()
         {
@@ -103,9 +104,8 @@ namespace Stock_Analysis
 
             //cbm_stocklist.SelectedIndex = -1;
 
-
             //cbm_stocklist.DataSource = dt; //(ComboBox的問題在想一下，運行較久)
-            //cbm_stocklist.DisplayMember = 
+            //cbm_stocklist.DisplayMember =
 
             sw.Stop();
             TimeSpan ts_cbm_stocklist = sw.Elapsed;
@@ -115,8 +115,6 @@ namespace Stock_Analysis
 
             //richbox修改
             rtxt_ProcessStatus.Text = $"讀取時間: {ts_dGV_List}\nComboBox產生時間: {ts_cbm_stocklist}";
-
-            
         }
 
         private void btnOpenFile_Click(object sender, EventArgs e)
@@ -126,27 +124,86 @@ namespace Stock_Analysis
 
         private void cbm_stocklist_SelectedIndexChanged(object sender, EventArgs e)
         {
-             selected_Stock = cbm_stocklist.SelectedItem;
-            MessageBox.Show($"{selected_Stock.ToString()}");
+            selected_Stock = cbm_stocklist.SelectedItem;
+            //MessageBox.Show($"{selected_Stock.ToString()}");
         }
 
         private void btnStockSearch_Click(object sender, EventArgs e)
-        {   
+        {
+            int stockID = getstock_Search(selected_Stock);
+            int buytotal = getBuyTotal(stockID);
+            int celltotal = getCellTotal(stockID) ;
+            //double avgprice = getAvgPrice(, buytotal, celltotal);
+            int buycellover = (buytotal - celltotal);
+            int secbrokercnt = getSecBrokerCnt(stockID);
+            MessageBox.Show($"BuyTotal:{buytotal}\nCellTotal:{celltotal}\nAvgPrice:{celltotal}\nBuyCellOver:{buycellover}\nSecbrokerCnt:{secbrokercnt}");
+        }
+
+        //建立搜尋方法
+        public int getstock_Search(Object stock) 
+        {
             //以下為搜尋方法
-            String[] stock_Detail = selected_Stock.ToString().Split(' ');
+            String[] stock_Detail = stock.ToString().Split(' ');
             int stockID = int.Parse(stock_Detail[0]);
             string stockName = stock_Detail[2];
-            MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}"); //測試搜尋訊息正確
+            //MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}");
+
+            return stockID;
         }
 
 
-        //建立搜尋方法
-        public void stock_Search(Object selected_Stock)
+        public int getBuyTotal(int stockID)
         {
-            //String[] stock_Detail = selected_Stock.ToString().Split(' ');
-            //int stockID = int.Parse(stock_Detail[0]);
-            //string stockName = stock_Detail[2];
-            //MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}");
+            int BuyTotal = 0;
+            foreach (StockItem item in dt)
+            {
+                //MessageBox.Show($"{item.StockID}\n");
+                if ((int.Parse(item.StockID)) == stockID)
+                {
+                    BuyTotal += int.Parse(item.BuyQty);
+                }
+            }
+
+            return BuyTotal;
+        }
+
+        public int getCellTotal(int stockID)
+        {
+            int CellTotal = 0;
+            foreach (StockItem item in dt)
+            {
+                if ((int.Parse(item.StockID)) == stockID)
+                {
+                    CellTotal += int.Parse(item.CellQty);
+                }
+            }
+
+            return CellTotal;
+        }
+
+        public double getAvgPrice(int price, int buyTotal, int cellTotal) //再思考傳入的參數1
+        {
+            double AvgPrice = (price * buyTotal + price * cellTotal) / (buyTotal + cellTotal);
+            return AvgPrice;
+        }
+
+        public int getBuyCellOver(int buyTotal, int cellTotal) //
+        {
+            return (buyTotal - cellTotal);
+        }
+
+        public int getSecBrokerCnt(int stockID)
+        {
+            int count = 0;
+            foreach (StockItem item in dt)
+            {
+                if (int.Parse(item.StockID) == stockID)
+                {
+                    count += 1;
+                }
+            }
+
+            return count;
         }
     }
 }

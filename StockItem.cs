@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Stock_Analysis
 {
     internal class StockItem
     {
-        public string DealDate { get;}
+        public string DealDate { get; }
         public string StockID { get; }
         public string StockName { get; }
         public string SecBrokerID { get; }
@@ -25,6 +24,7 @@ namespace Stock_Analysis
             this.BuyQty = BuyQty;
             this.CellQty = CellQty;
         }*/
+
         public StockItem(string data)
         {
             //List<string> Data = new List<string>(data.Split(','));//改array測試
@@ -41,36 +41,61 @@ namespace Stock_Analysis
 
         public string[] getStockItem()
         {
-            string[] data = new string[] {DealDate, StockID, StockName, SecBrokerID, SecBrokerName, Price, BuyQty, CellQty};
+            string[] data = new string[] { DealDate, StockID, StockName, SecBrokerID, SecBrokerName, Price, BuyQty, CellQty };
             return data;
-         }
-
-        public void getBuyTotal()
+        }
+        /*
+        public int getBuyTotal(int stockID, List<StockItem> stock_list)
         {
-        
+            int BuyTotal = 0;
+            foreach (StockItem item in stock_list)
+            {
+                if (int.Parse(item.StockID) == stockID)
+                {
+                    BuyTotal += int.Parse(item.BuyQty);
+                }
+            }
 
-            
+            return BuyTotal;
         }
 
-        public void getCellTotal()
+        public int getCellTotal(int stockID, List<StockItem> stock_list)
         {
+            int CellTotal = 0;
+            foreach (StockItem item in stock_list)
+            {
+                if (int.Parse(item.StockID) == stockID)
+                {
+                    CellTotal += int.Parse(item.CellQty);
+                }
+            }
 
+            return CellTotal;
         }
 
-        public void getAvgPrice()
+        public double getAvgPrice(int price, int buyTotal, int cellTotal) //再思考傳入的參數1
         {
-
+            double AvgPrice = (price * buyTotal + price * cellTotal) / (buyTotal + cellTotal);
+            return AvgPrice;
         }
 
-        public void getBuyCellOver()
+        public int getBuyCellOver(int buyTotal, int cellTotal) //
         {
-
+            return (buyTotal - cellTotal);
         }
 
-        public void getSecBrokerCnt()
+        public int getSecBrokerCnt(int stockID, List<StockItem> stock_list)
         {
+            int count = 0;
+            foreach (StockItem item in stock_list)
+            {
+                if (int.Parse(item.StockID) == stockID)
+                {
+                    count += 1;
+                }
+            }
 
-        }
-
+            return count;
+        }*/
     }
 }
