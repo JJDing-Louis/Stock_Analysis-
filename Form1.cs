@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Stock_Analysis
@@ -11,15 +12,16 @@ namespace Stock_Analysis
     public partial class Form1 : Form
     {
         private OpenFileDialog odf = new OpenFileDialog();
-        private string fileAdress;
+        //private string fileAdress;
         private string columnName;
+        private string text;
 
         //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
         private List<StockItem> dt = new List<StockItem>(); //建立股票的所有資料，以List建立
         List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資料陣列
 
         private StockItem stock;
-        private Object selected_Stock;
+        private Object selected_Stock; //Combox的文字內容
 
         public Form1()
         {
@@ -62,22 +64,6 @@ namespace Stock_Analysis
                 stockContent = sr.ReadLine();
             }
             dGV_List.DataSource = dt;
-            /*
-            while (true)
-            {
-                string stockContent = sr.ReadLine();
-                if (stockContent == null)
-                {
-                    break;
-                }
-                StockItem stock = new StockItem(stockContent);
-                DataRow row = dt.NewRow();
-                for (int j = 0; j < column_Name.Length; j++)
-                {
-                    row[column_Name[j]] = stock.getStockItem()[j];
-                }
-                dt.Rows.Add(row);
-            }*/
 
             sw.Stop();
             TimeSpan ts_dGV_List = sw.Elapsed;
@@ -122,24 +108,58 @@ namespace Stock_Analysis
         {
             odf.ShowDialog();
         }
-
+        /// <summary>
+        /// 發現選單有更換，所觸發的事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbm_stocklist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selected_Stock = cbm_stocklist.SelectedItem;
+            //selected_Stock = cbm_stocklist.SelectedItem;
+            selected_Stock = cbm_stocklist.Text;
             //MessageBox.Show($"{selected_Stock.ToString()}");
+
+        }
+        /// <summary>
+        /// 發現選單有輸入文字，所觸發的事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbm_stocklist_TextUpdate(object sender, EventArgs e)
+        {
+            selected_Stock = cbm_stocklist.Text;
         }
 
         private void btnStockSearch_Click(object sender, EventArgs e)
         {
-            string stockID = getstock_Search(selected_Stock)[0];
-            string stockName = getstock_Search(selected_Stock)[2];
-            int buytotal = getBuyTotal(stockID);
-            int celltotal = getCellTotal(stockID);
-            double avgprice = getAvgPrice(getstockPrice(stockID), buytotal, celltotal);
-            int buycellover = (buytotal - celltotal);
-            int secbrokercnt = getSecBrokerCnt(stockID);
-            MessageBox.Show($"StockID:{stockID}\nStockName:{stockName}\nBuyTotal:{buytotal}\nCellTotal:{celltotal}\nAvgPrice:{avgprice}\nBuyCellOver:{buycellover}\nSecbrokerCnt:{secbrokercnt}");
-            //StockInformation item = new StockInformation(stockID, stockName, buytotal, celltotal,avgprice, buycellover, secbrokercnt);
+
+            MessageBox.Show(selected_Stock.ToString());
+            //需判斷輸入的條件
+            //建立 Regular Expression 正則表達式
+            Regex rergex = new Regex("^([A-Za-z0-9]{4,},){0,}$");
+            if (rergex.IsMatch(selected_Stock.ToString()))
+            {
+                MessageBox.Show("Success!");
+            }
+            else { MessageBox.Show("Fail!"); }
+
+
+
+            //下拉選單
+            //string stockID = getstock_Search(selected_Stock)[0];
+            //string stockName = getstock_Search(selected_Stock)[2];
+            //int buytotal = getBuyTotal(stockID);
+            //int celltotal = getCellTotal(stockID);
+            //double avgprice = getAvgPrice(getstockPrice(stockID), buytotal, celltotal);
+            //int buycellover = (buytotal - celltotal);
+            //int secbrokercnt = getSecBrokerCnt(stockID);
+            ////MessageBox.Show($"StockID:{stockID}\nStockName:{stockName}\nBuyTotal:{buytotal}\nCellTotal:{celltotal}\nAvgPrice:{avgprice}\nBuyCellOver:{buycellover}\nSecbrokerCnt:{secbrokercnt}");
+            //StockInformation item = new StockInformation(stockID, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt);
+            //stockInformation_dt.Add(item);
+            //dGV_Items.DataSource = stockInformation_dt;
+
+            //輸入值
+
 
         }
 
@@ -148,12 +168,11 @@ namespace Stock_Analysis
         {
             //以下為搜尋方法
             String[] stock_Detail = stock.ToString().Split(' ');
-            //string stockID = stock_Detail[0];
-            //string stockName = stock_Detail[2];
-            //MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}");
-
             return stock_Detail;
         }
+
+
+
         //股票詢價
         public double getstockPrice(string stockID)
         {
@@ -167,7 +186,6 @@ namespace Stock_Analysis
                     }
                 }
             return StockPrice;
-
         } 
 
 

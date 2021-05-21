@@ -74,7 +74,7 @@ namespace Stock_Analysis
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(772, 17);
+            this.lblStatus.Location = new System.Drawing.Point(786, 17);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(53, 12);
             this.lblStatus.TabIndex = 4;
@@ -84,16 +84,16 @@ namespace Stock_Analysis
             // 
             this.btnMarketingRank.Location = new System.Drawing.Point(764, 40);
             this.btnMarketingRank.Name = "btnMarketingRank";
-            this.btnMarketingRank.Size = new System.Drawing.Size(75, 23);
+            this.btnMarketingRank.Size = new System.Drawing.Size(95, 23);
             this.btnMarketingRank.TabIndex = 5;
             this.btnMarketingRank.Text = "買賣超Top50";
             this.btnMarketingRank.UseVisualStyleBackColor = true;
             // 
             // rtxt_ProcessStatus
             // 
-            this.rtxt_ProcessStatus.Location = new System.Drawing.Point(850, 12);
+            this.rtxt_ProcessStatus.Location = new System.Drawing.Point(865, 11);
             this.rtxt_ProcessStatus.Name = "rtxt_ProcessStatus";
-            this.rtxt_ProcessStatus.Size = new System.Drawing.Size(247, 51);
+            this.rtxt_ProcessStatus.Size = new System.Drawing.Size(242, 62);
             this.rtxt_ProcessStatus.TabIndex = 6;
             this.rtxt_ProcessStatus.Text = "";
             // 
@@ -103,7 +103,7 @@ namespace Stock_Analysis
             this.dGV_List.Location = new System.Drawing.Point(12, 78);
             this.dGV_List.Name = "dGV_List";
             this.dGV_List.RowTemplate.Height = 24;
-            this.dGV_List.Size = new System.Drawing.Size(827, 267);
+            this.dGV_List.Size = new System.Drawing.Size(847, 267);
             this.dGV_List.TabIndex = 7;
             // 
             // dGV_Items
@@ -112,13 +112,13 @@ namespace Stock_Analysis
             this.dGV_Items.Location = new System.Drawing.Point(12, 351);
             this.dGV_Items.Name = "dGV_Items";
             this.dGV_Items.RowTemplate.Height = 24;
-            this.dGV_Items.Size = new System.Drawing.Size(827, 221);
+            this.dGV_Items.Size = new System.Drawing.Size(847, 221);
             this.dGV_Items.TabIndex = 8;
             // 
             // dGV_StockRank
             // 
             this.dGV_StockRank.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dGV_StockRank.Location = new System.Drawing.Point(854, 78);
+            this.dGV_StockRank.Location = new System.Drawing.Point(865, 79);
             this.dGV_StockRank.Name = "dGV_StockRank";
             this.dGV_StockRank.RowTemplate.Height = 24;
             this.dGV_StockRank.Size = new System.Drawing.Size(242, 493);
@@ -132,12 +132,13 @@ namespace Stock_Analysis
             this.cbm_stocklist.Size = new System.Drawing.Size(661, 20);
             this.cbm_stocklist.TabIndex = 10;
             this.cbm_stocklist.SelectedIndexChanged += new System.EventHandler(this.cbm_stocklist_SelectedIndexChanged);
+            this.cbm_stocklist.TextUpdate += new System.EventHandler(this.cbm_stocklist_TextUpdate);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1109, 584);
+            this.ClientSize = new System.Drawing.Size(1111, 584);
             this.Controls.Add(this.cbm_stocklist);
             this.Controls.Add(this.dGV_StockRank);
             this.Controls.Add(this.dGV_Items);
