@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Stock_Analysis
+﻿namespace Stock_Analysis
 {
     internal class StockItem
     {
@@ -44,6 +42,7 @@ namespace Stock_Analysis
             string[] data = new string[] { DealDate, StockID, StockName, SecBrokerID, SecBrokerName, Price, BuyQty, CellQty };
             return data;
         }
+
         /*
         public int getBuyTotal(int stockID, List<StockItem> stock_list)
         {

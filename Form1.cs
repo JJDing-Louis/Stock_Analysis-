@@ -16,6 +16,7 @@ namespace Stock_Analysis
 
         //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
         private List<StockItem> dt = new List<StockItem>(); //建立股票的所有資料，以List建立
+        List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資料陣列
 
         private StockItem stock;
         private Object selected_Stock;
@@ -130,35 +131,53 @@ namespace Stock_Analysis
 
         private void btnStockSearch_Click(object sender, EventArgs e)
         {
-            int stockID = getstock_Search(selected_Stock);
+            string stockID = getstock_Search(selected_Stock)[0];
+            string stockName = getstock_Search(selected_Stock)[2];
             int buytotal = getBuyTotal(stockID);
-            int celltotal = getCellTotal(stockID) ;
-            //double avgprice = getAvgPrice(, buytotal, celltotal);
+            int celltotal = getCellTotal(stockID);
+            double avgprice = getAvgPrice(getstockPrice(stockID), buytotal, celltotal);
             int buycellover = (buytotal - celltotal);
             int secbrokercnt = getSecBrokerCnt(stockID);
-            MessageBox.Show($"BuyTotal:{buytotal}\nCellTotal:{celltotal}\nAvgPrice:{celltotal}\nBuyCellOver:{buycellover}\nSecbrokerCnt:{secbrokercnt}");
+            MessageBox.Show($"StockID:{stockID}\nStockName:{stockName}\nBuyTotal:{buytotal}\nCellTotal:{celltotal}\nAvgPrice:{avgprice}\nBuyCellOver:{buycellover}\nSecbrokerCnt:{secbrokercnt}");
+            //StockInformation item = new StockInformation(stockID, stockName, buytotal, celltotal,avgprice, buycellover, secbrokercnt);
+
         }
 
         //建立搜尋方法
-        public int getstock_Search(Object stock) 
+        public string[] getstock_Search(Object stock)
         {
             //以下為搜尋方法
             String[] stock_Detail = stock.ToString().Split(' ');
-            int stockID = int.Parse(stock_Detail[0]);
-            string stockName = stock_Detail[2];
+            //string stockID = stock_Detail[0];
+            //string stockName = stock_Detail[2];
             //MessageBox.Show($"股票代號:{stockID}\n股票名稱:{stockName}");
 
-            return stockID;
+            return stock_Detail;
         }
+        //股票詢價
+        public double getstockPrice(string stockID)
+        {
+            double StockPrice=0;
+
+                foreach (StockItem item in dt)
+                {
+                    if (item.StockID.Equals(stockID))
+                    {
+                        StockPrice = double.Parse(item.Price);
+                    }
+                }
+            return StockPrice;
+
+        } 
 
 
-        public int getBuyTotal(int stockID)
+        public int getBuyTotal(string stockID)
         {
             int BuyTotal = 0;
             foreach (StockItem item in dt)
             {
                 //MessageBox.Show($"{item.StockID}\n");
-                if ((int.Parse(item.StockID)) == stockID)
+                if (item.StockID.Equals(stockID))
                 {
                     BuyTotal += int.Parse(item.BuyQty);
                 }
@@ -167,12 +186,12 @@ namespace Stock_Analysis
             return BuyTotal;
         }
 
-        public int getCellTotal(int stockID)
+        public int getCellTotal(string stockID)
         {
             int CellTotal = 0;
             foreach (StockItem item in dt)
             {
-                if ((int.Parse(item.StockID)) == stockID)
+                if (item.StockID.Equals(stockID))
                 {
                     CellTotal += int.Parse(item.CellQty);
                 }
@@ -181,7 +200,7 @@ namespace Stock_Analysis
             return CellTotal;
         }
 
-        public double getAvgPrice(int price, int buyTotal, int cellTotal) //再思考傳入的參數1
+        public double getAvgPrice(double price, int buyTotal, int cellTotal) //再思考傳入的參數1
         {
             double AvgPrice = (price * buyTotal + price * cellTotal) / (buyTotal + cellTotal);
             return AvgPrice;
@@ -192,18 +211,20 @@ namespace Stock_Analysis
             return (buyTotal - cellTotal);
         }
 
-        public int getSecBrokerCnt(int stockID)
+        public int getSecBrokerCnt(string stockID)
         {
-            int count = 0;
+            List<string> secBrokerID_list = new List<string>();
             foreach (StockItem item in dt)
             {
-                if (int.Parse(item.StockID) == stockID)
+                if (item.StockID.Equals(stockID))
                 {
-                    count += 1;
+                    if (!secBrokerID_list.Contains(item.SecBrokerID))
+                    {
+                        secBrokerID_list.Add(item.SecBrokerID);
+                    }
                 }
             }
-
-            return count;
+            return secBrokerID_list.Count;
         }
     }
 }
