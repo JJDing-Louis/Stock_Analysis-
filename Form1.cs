@@ -338,5 +338,18 @@ namespace Stock_Analysis
             }
             return secBrokerID_list.Count;
         }
+
+        public void getStockRankTop50()
+        {
+            Regex rergex = new Regex("^([A-Za-z0-9]{4,},){0,}$");
+            if (rergex.IsMatch(selected_Stock))
+            {
+                
+            }
+            else
+            {
+               
+            }
+        }
     }
 }
