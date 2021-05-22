@@ -18,6 +18,7 @@ namespace Stock_Analysis
 
         private string text;
         private StockItem stock;
+        //private StockInformation stockInformation;
         private string selected_Stock; //Combox的文字內容
 
         //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
@@ -165,7 +166,7 @@ namespace Stock_Analysis
             }
             else
             {
-                MessageBox.Show("List itme"); //=> 偵測用程式碼
+                MessageBox.Show("List Item Seach"); //=> 偵測用程式碼
 
                 //先清空一次資料源
                 stockItems_dt.Clear();
@@ -183,8 +184,15 @@ namespace Stock_Analysis
                 }
                 dGV_List.DataSource = stockItems_dt;
 
-            }
+                //ComboBox更新
+                //先清空一次資料源
+                stockInformation_dt.Clear();
+                dGV_Items.DataSource = null;
 
+                //讀取新資料
+                getstockInformation_Search(stockID);
+                dGV_Items.DataSource = stockInformation_dt;
+            }
         }
 
         /// <summary>
@@ -203,7 +211,7 @@ namespace Stock_Analysis
             double avgprice = getAvgPrice(getstockPrice(stockID), buytotal, celltotal);
             int buycellover = (buytotal - celltotal);
             int secbrokercnt = getSecBrokerCnt(stockID);
-            //Object[] stcokInfomation = new object[] { stock, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt };
+            //Object[] stockInformation = new Object[] { stock, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt };
             StockInformation stockInformation = new StockInformation(stock, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt);
             stockInformation_dt.Add(stockInformation);
             //return stockInformation;
