@@ -32,7 +32,7 @@ namespace Stock_Analysis
             this.txtfile_address = new System.Windows.Forms.TextBox();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.btnStockSearch = new System.Windows.Forms.Button();
-            this.lblStatus = new System.Windows.Forms.Label();
+            this.lb_Status = new System.Windows.Forms.Label();
             this.btnMarketingRank = new System.Windows.Forms.Button();
             this.rtxt_ProcessStatus = new System.Windows.Forms.RichTextBox();
             this.dGV_List = new System.Windows.Forms.DataGridView();
@@ -73,12 +73,12 @@ namespace Stock_Analysis
             // 
             // lblStatus
             // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(786, 17);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(53, 12);
-            this.lblStatus.TabIndex = 4;
-            this.lblStatus.Text = "讀取狀態";
+            this.lb_Status.AutoSize = true;
+            this.lb_Status.Location = new System.Drawing.Point(786, 17);
+            this.lb_Status.Name = "lblStatus";
+            this.lb_Status.Size = new System.Drawing.Size(53, 12);
+            this.lb_Status.TabIndex = 4;
+            this.lb_Status.Text = "讀取狀態";
             // 
             // btnMarketingRank
             // 
@@ -146,7 +146,7 @@ namespace Stock_Analysis
             this.Controls.Add(this.dGV_List);
             this.Controls.Add(this.rtxt_ProcessStatus);
             this.Controls.Add(this.btnMarketingRank);
-            this.Controls.Add(this.lblStatus);
+            this.Controls.Add(this.lb_Status);
             this.Controls.Add(this.btnStockSearch);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.txtfile_address);
@@ -165,7 +165,7 @@ namespace Stock_Analysis
         private System.Windows.Forms.TextBox txtfile_address;
         private System.Windows.Forms.Button btnOpenFile;
         private System.Windows.Forms.Button btnStockSearch;
-        private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.Label lb_Status;
         private System.Windows.Forms.Button btnMarketingRank;
         private System.Windows.Forms.RichTextBox rtxt_ProcessStatus;
         private System.Windows.Forms.DataGridView dGV_List;

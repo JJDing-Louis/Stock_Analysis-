@@ -11,26 +11,27 @@ namespace Stock_Analysis
 {
     public partial class Form1 : Form
     {
-        private OpenFileDialog odf = new OpenFileDialog();
+        //private OpenFileDialog odf = new OpenFileDialog();
 
-        //private string fileAdress;
         private string columnName;
 
         private string text;
         private StockItem stock;
         private StockRankItem stockRank;
-        //private StockInformation stockInformation;
-        private string selected_Stock; //Combox的文字內容
 
-        //private DataTable dt = new DataTable("StockTable"); //建立ＤataTable
+        //建立開啟檔案的物件
+        private OpenFileDialog odf = new OpenFileDialog();
+
+        private string selected_Stock; //Combox的文字內容
         private List<StockItem> dt = new List<StockItem>(); //建立股票的所有資料，以List建立
 
         private List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資料陣列
         private List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
-        //以下排列用
+
+        //以下BuyCellOver排序用
         private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料用的列表陣列
+
         private List<StockItem> stockRbufferList = new List<StockItem>();//RankBuffer
-        //private List<StockItem> stockRbufferList2 = new List<StockItem>();//RankBuffer
 
         public Form1()
         {
@@ -47,10 +48,7 @@ namespace Stock_Analysis
 
             odf.ShowReadOnly = true;
             odf.Title = "請選取股票資料";
-            odf.FileOk += new CancelEventHandler(odf_FileOk);
-
-            //排名欄位
-            //dGV_StockRank.RowCount = 50;
+            odf.FileOk += new CancelEventHandler(odf_FileOk); //查一下用法
         }
 
         private void odf_FileOk(object sender, CancelEventArgs e)
@@ -61,7 +59,7 @@ namespace Stock_Analysis
 
             //MessageBox.Show(odf.FileName);
             txtfile_address.Text = odf.FileName;
-            lblStatus.Text = "讀取中";
+            lb_Status.Text = "讀取中";
             FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read, FileShare.None);
             StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
 
@@ -85,7 +83,7 @@ namespace Stock_Analysis
 
             //建立combolist
             List<string> stocklist = new List<string>();
-            Hashtable htb = new Hashtable();
+            Hashtable htb = new Hashtable(); //改Dictoinary
             foreach (StockItem item in dt)
             {
                 if (htb.Contains(item.StockID))
@@ -110,7 +108,7 @@ namespace Stock_Analysis
             TimeSpan ts_cbm_stocklist = sw.Elapsed;
 
             //txt修改
-            lblStatus.Text = "讀檔完成";
+            lb_Status.Text = "讀檔完成";
 
             //richbox修改
             rtxt_ProcessStatus.Text = $"讀取時間: {ts_dGV_List}\nComboBox產生時間: {ts_cbm_stocklist}";
@@ -118,17 +116,21 @@ namespace Stock_Analysis
 
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
+            List<StockItem> a = new List<StockItem>();
+
+            Dictionary<string, List<StockItem>> dictionary = new Dictionary<string, List<StockItem>>();
+            dictionary.Add("1234", a);
+
             odf.ShowDialog();
         }
 
         /// <summary>
         /// 發現選單有更換，所觸發的事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">讀取盪案按鍵</param>
+        /// <param name="e">讀取檔案室建</param>
         private void cbm_stocklist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //selected_Stock = cbm_stocklist.SelectedItem;
             //MessageBox.Show($"{selected_Stock.ToString()}"); => 偵測用程式碼
             selected_Stock = cbm_stocklist.Text;
         }
@@ -150,56 +152,56 @@ namespace Stock_Analysis
         /// <param name="e"></param>
         private void btnStockSearch_Click(object sender, EventArgs e)
         {
-            Regex rergex = new Regex("^([A-Za-z0-9]{4,},){0,}$");
+            Regex rergex = new Regex("^([A-9]{4,},){0,}$");
             if (rergex.IsMatch(selected_Stock))
             {
+                MessageBox.Show("Key in Word"); //=> 偵測用程式碼
                 //先清空一次資料源
-                stockItems_dt.Clear();
-                dGV_List.DataSource = null;
+                //stockItems_dt.Clear();
+                //dGV_List.DataSource = null;
 
-                //MessageBox.Show("Key in Word"); => 偵測用程式碼
-                string[] items = selected_Stock.Split(',');
-                foreach (string item in items)
-                {
-                    foreach (StockItem stock in dt)
-                    {
-                        if (stock.StockID.Equals(item))
-                        {
-                            stockItems_dt.Add(stock);
-                        }
-                    }
-                }
+                //string[] items = selected_Stock.Split(',');
+                //foreach (string item in items)
+                //{
+                //    foreach (StockItem stock in dt)
+                //    {
+                //        if (stock.StockID.Equals(item))
+                //        {
+                //            stockItems_dt.Add(stock);
+                //        }
+                //    }
+                //}
 
-                dGV_List.DataSource = stockItems_dt;
+                //dGV_List.DataSource = stockItems_dt;
             }
             else
             {
                 MessageBox.Show("List Item Seach"); //=> 偵測用程式碼
 
                 //先清空一次資料源
-                stockItems_dt.Clear();
-                dGV_List.DataSource = null;
+                //stockItems_dt.Clear();
+                //dGV_List.DataSource = null;
 
                 //開始查詢資料
-                string stockID = selected_Stock.Split(' ')[0];
+                //string stockID = selected_Stock.Split(' ')[0];
 
-                foreach (StockItem stock in dt)
-                {
-                    if (stock.StockID.Equals(stockID))
-                    {
-                        stockItems_dt.Add(stock);
-                    }
-                }
-                dGV_List.DataSource = stockItems_dt;
+                //foreach (StockItem stock in dt)
+                //{
+                //    if (stock.StockID.Equals(stockID))
+                //    {
+                //        stockItems_dt.Add(stock);
+                //    }
+                //}
+                //dGV_List.DataSource = stockItems_dt;
 
-                //ComboBox更新
+                //股票查詢資料更新更新
                 //先清空一次資料源
-                stockInformation_dt.Clear();
-                dGV_Items.DataSource = null;
+                //stockInformation_dt.Clear();
+                //dGV_Items.DataSource = null;
 
                 //讀取新資料
-                getstockInformation_Search(stockID);
-                dGV_Items.DataSource = stockInformation_dt;
+                //getstockInformation_Search(stockID);
+                //dGV_Items.DataSource = stockInformation_dt;
             }
         }
 
@@ -219,10 +221,8 @@ namespace Stock_Analysis
             double avgprice = getAvgPrice(getstockPrice(stockID), buytotal, celltotal);
             int buycellover = (buytotal - celltotal);
             int secbrokercnt = getSecBrokerCnt(stockID);
-            //Object[] stockInformation = new Object[] { stock, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt };
             StockInformation stockInformation = new StockInformation(stock, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt);
             stockInformation_dt.Add(stockInformation);
-            //return stockInformation;
         }
 
         /// <summary>
@@ -308,8 +308,7 @@ namespace Stock_Analysis
         /// <param name="buyTotal"></param>
         /// <param name="cellTotal"></param>
         /// <returns></returns>
-
-        public double getAvgPrice(double price, int buyTotal, int cellTotal) //再思考傳入的參數1
+        public double getAvgPrice(double price, int buyTotal, int cellTotal)
         {
             double AvgPrice = (price * buyTotal + price * cellTotal) / (buyTotal + cellTotal);
             return AvgPrice;
@@ -327,7 +326,7 @@ namespace Stock_Analysis
         }
 
         /// <summary>
-        /// 統計券商代號
+        /// 統計券商代號得總類數目
         /// </summary>
         /// <param name="stockID"></param>
         /// <returns></returns>
@@ -346,88 +345,6 @@ namespace Stock_Analysis
             }
             return secBrokerID_list.Count;
         }
-        /*
-        public void getStockRankTop50()
-        {
-            Regex rergex = new Regex("^([A-Za-z0-9]{4,},){0,}$");
-            if (rergex.IsMatch(selected_Stock))
-            {
-                //先清空一次資料源
-                stockItems_dt.Clear();
-                dGV_List.DataSource = null;
-
-                //MessageBox.Show("Key in Word"); => 偵測用程式碼
-                string[] items = selected_Stock.Split(',');
-                foreach (string item in items)
-                {
-                    foreach (StockItem stock in dt)
-                    {
-                        if (stock.StockID.Equals(item))
-                        {
-                            stockItems_dt.Add(stock);
-                        }
-                    }
-                }
-
-                dGV_List.DataSource = stockItems_dt;
-            }
-            else
-            {
-                //先清空一次資料源
-                //stockRanklist_dt.Clear();
-                //dGV_StockRank.DataSource = null;
-
-                //開始查詢資料
-                string stockID = selected_Stock.Split(' ')[0];
-
-                //先濾出股票ID
-                foreach (StockItem stock in dt)
-                {
-                    if (stock.StockID.Equals(stockID))
-                    {
-                        stockRbufferList.Add(stock);
-                    }
-                }
-
-                //建立SecBrokerlist
-                List<string> secBrokerlist = new List<string>(); 
-                foreach (StockItem stock in stockRbufferList)
-                {
-                    if (!secBrokerlist.Contains(stock.SecBrokerName)) {
-                        secBrokerlist.Add((stock.SecBrokerName));
-                    }
-                }
-
-                //合併相同的SecBrokerID
-
-                foreach (string secBroker in secBrokerlist) //先取secBroker
-                {
-                    string stockName = string.Empty;
-                    int buyTotal = 0;
-                    int cellTotal = 0;
-                    int buyCellOver = 0;                    
-                    foreach (StockItem item in stockRbufferList)//比對各項
-                    {
-                        stockName = item.StockName;
-                        if (item.SecBrokerName.Equals(secBroker))
-                        {
-                            buyTotal += int.Parse(item.BuyQty);
-                            cellTotal += int.Parse(item.CellQty);
-                        }
-                    }
-                    buyCellOver = buyTotal - cellTotal;
-                    stockRank = new StockRankItem(stockName, secBroker, buyCellOver);
-                    stockRanklist_dt.Add(stockRank);
-                }
-
-                //排序
-                //stockRanklist_dt.Sort();
-                dGV_StockRank.DataSource = stockRanklist_dt;
-
-
-
-            }
-        }*/
 
         private void btnMarketingRank_Click(object sender, EventArgs e)
         {
@@ -435,8 +352,8 @@ namespace Stock_Analysis
             if (rergex.IsMatch(selected_Stock))
             {
                 //先清空一次資料源
-                stockItems_dt.Clear();
-                dGV_List.DataSource = null;
+                stockRanklist_dt.Clear();
+                dGV_StockRank.DataSource = null;
 
                 //MessageBox.Show("Key in Word"); => 偵測用程式碼
                 string[] items = selected_Stock.Split(',');
@@ -503,25 +420,11 @@ namespace Stock_Analysis
                     stockRanklist_dt.Add(stockRank);
                 }
 
-                //排序
-                stockRanklist_dt.Sort((x,y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
+                //排序與顯示前50筆資料
+                stockRanklist_dt.Sort((x, y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
                 stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
                 MessageBox.Show($"{stockRanklist_dt.Count}");
                 dGV_StockRank.DataSource = stockRanklist_dt;
-
-
-
-                /*
-                dGV_List.DataSource = stockItems_dt;
-
-                //ComboBox更新
-                //先清空一次資料源
-                stockInformation_dt.Clear();
-                dGV_Items.DataSource = null;
-
-                //讀取新資料
-                getstockInformation_Search(stockID);
-                dGV_Items.DataSource = stockInformation_dt;*/
             }
         }
     }
