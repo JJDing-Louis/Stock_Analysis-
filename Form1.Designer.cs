@@ -88,12 +88,13 @@ namespace Stock_Analysis
             this.btnMarketingRank.TabIndex = 5;
             this.btnMarketingRank.Text = "買賣超Top50";
             this.btnMarketingRank.UseVisualStyleBackColor = true;
+            this.btnMarketingRank.Click += new System.EventHandler(this.btnMarketingRank_Click);
             // 
             // rtxt_ProcessStatus
             // 
             this.rtxt_ProcessStatus.Location = new System.Drawing.Point(865, 11);
             this.rtxt_ProcessStatus.Name = "rtxt_ProcessStatus";
-            this.rtxt_ProcessStatus.Size = new System.Drawing.Size(242, 62);
+            this.rtxt_ProcessStatus.Size = new System.Drawing.Size(334, 62);
             this.rtxt_ProcessStatus.TabIndex = 6;
             this.rtxt_ProcessStatus.Text = "";
             // 
@@ -121,7 +122,7 @@ namespace Stock_Analysis
             this.dGV_StockRank.Location = new System.Drawing.Point(865, 79);
             this.dGV_StockRank.Name = "dGV_StockRank";
             this.dGV_StockRank.RowTemplate.Height = 24;
-            this.dGV_StockRank.Size = new System.Drawing.Size(242, 493);
+            this.dGV_StockRank.Size = new System.Drawing.Size(334, 493);
             this.dGV_StockRank.TabIndex = 9;
             // 
             // cbm_stocklist
@@ -138,7 +139,7 @@ namespace Stock_Analysis
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1111, 584);
+            this.ClientSize = new System.Drawing.Size(1211, 584);
             this.Controls.Add(this.cbm_stocklist);
             this.Controls.Add(this.dGV_StockRank);
             this.Controls.Add(this.dGV_Items);

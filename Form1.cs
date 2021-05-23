@@ -18,6 +18,7 @@ namespace Stock_Analysis
 
         private string text;
         private StockItem stock;
+        private StockRankItem stockRank;
         //private StockInformation stockInformation;
         private string selected_Stock; //Combox的文字內容
 
@@ -26,6 +27,10 @@ namespace Stock_Analysis
 
         private List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資料陣列
         private List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
+        //以下排列用
+        private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料用的列表陣列
+        private List<StockItem> stockRbufferList = new List<StockItem>();//RankBuffer
+        //private List<StockItem> stockRbufferList2 = new List<StockItem>();//RankBuffer
 
         public Form1()
         {
@@ -43,6 +48,9 @@ namespace Stock_Analysis
             odf.ShowReadOnly = true;
             odf.Title = "請選取股票資料";
             odf.FileOk += new CancelEventHandler(odf_FileOk);
+
+            //排名欄位
+            //dGV_StockRank.RowCount = 50;
         }
 
         private void odf_FileOk(object sender, CancelEventArgs e)
@@ -338,17 +346,182 @@ namespace Stock_Analysis
             }
             return secBrokerID_list.Count;
         }
-
+        /*
         public void getStockRankTop50()
         {
             Regex rergex = new Regex("^([A-Za-z0-9]{4,},){0,}$");
             if (rergex.IsMatch(selected_Stock))
             {
-                
+                //先清空一次資料源
+                stockItems_dt.Clear();
+                dGV_List.DataSource = null;
+
+                //MessageBox.Show("Key in Word"); => 偵測用程式碼
+                string[] items = selected_Stock.Split(',');
+                foreach (string item in items)
+                {
+                    foreach (StockItem stock in dt)
+                    {
+                        if (stock.StockID.Equals(item))
+                        {
+                            stockItems_dt.Add(stock);
+                        }
+                    }
+                }
+
+                dGV_List.DataSource = stockItems_dt;
             }
             else
             {
-               
+                //先清空一次資料源
+                //stockRanklist_dt.Clear();
+                //dGV_StockRank.DataSource = null;
+
+                //開始查詢資料
+                string stockID = selected_Stock.Split(' ')[0];
+
+                //先濾出股票ID
+                foreach (StockItem stock in dt)
+                {
+                    if (stock.StockID.Equals(stockID))
+                    {
+                        stockRbufferList.Add(stock);
+                    }
+                }
+
+                //建立SecBrokerlist
+                List<string> secBrokerlist = new List<string>(); 
+                foreach (StockItem stock in stockRbufferList)
+                {
+                    if (!secBrokerlist.Contains(stock.SecBrokerName)) {
+                        secBrokerlist.Add((stock.SecBrokerName));
+                    }
+                }
+
+                //合併相同的SecBrokerID
+
+                foreach (string secBroker in secBrokerlist) //先取secBroker
+                {
+                    string stockName = string.Empty;
+                    int buyTotal = 0;
+                    int cellTotal = 0;
+                    int buyCellOver = 0;                    
+                    foreach (StockItem item in stockRbufferList)//比對各項
+                    {
+                        stockName = item.StockName;
+                        if (item.SecBrokerName.Equals(secBroker))
+                        {
+                            buyTotal += int.Parse(item.BuyQty);
+                            cellTotal += int.Parse(item.CellQty);
+                        }
+                    }
+                    buyCellOver = buyTotal - cellTotal;
+                    stockRank = new StockRankItem(stockName, secBroker, buyCellOver);
+                    stockRanklist_dt.Add(stockRank);
+                }
+
+                //排序
+                //stockRanklist_dt.Sort();
+                dGV_StockRank.DataSource = stockRanklist_dt;
+
+
+
+            }
+        }*/
+
+        private void btnMarketingRank_Click(object sender, EventArgs e)
+        {
+            Regex rergex = new Regex("^([A-Za-z0-9]{4,},){0,}$");
+            if (rergex.IsMatch(selected_Stock))
+            {
+                //先清空一次資料源
+                stockItems_dt.Clear();
+                dGV_List.DataSource = null;
+
+                //MessageBox.Show("Key in Word"); => 偵測用程式碼
+                string[] items = selected_Stock.Split(',');
+                foreach (string item in items)
+                {
+                    foreach (StockItem stock in dt)
+                    {
+                        if (stock.StockID.Equals(item))
+                        {
+                            stockItems_dt.Add(stock);
+                        }
+                    }
+                }
+
+                dGV_List.DataSource = stockItems_dt;
+            }
+            else
+            {
+                //先清空一次資料源
+                stockRanklist_dt.Clear();
+                dGV_StockRank.DataSource = null;
+
+                //開始查詢資料
+                string stockID = selected_Stock.Split(' ')[0];
+
+                //先濾出股票ID
+                foreach (StockItem stock in dt)
+                {
+                    if (stock.StockID.Equals(stockID))
+                    {
+                        stockRbufferList.Add(stock);
+                    }
+                }
+
+                //建立SecBrokerlist
+                List<string> secBrokerlist = new List<string>();
+                foreach (StockItem stock in stockRbufferList)
+                {
+                    if (!secBrokerlist.Contains(stock.SecBrokerName))
+                    {
+                        secBrokerlist.Add((stock.SecBrokerName));
+                    }
+                }
+
+                //合併相同的SecBrokerID
+
+                foreach (string secBroker in secBrokerlist) //先取secBroker
+                {
+                    string stockName = string.Empty;
+                    int buyTotal = 0;
+                    int cellTotal = 0;
+                    int buyCellOver = 0;
+                    foreach (StockItem item in stockRbufferList)//比對各項
+                    {
+                        stockName = item.StockName;
+                        if (item.SecBrokerName.Equals(secBroker))
+                        {
+                            buyTotal += int.Parse(item.BuyQty);
+                            cellTotal += int.Parse(item.CellQty);
+                        }
+                    }
+                    buyCellOver = buyTotal - cellTotal;
+                    stockRank = new StockRankItem(stockName, secBroker, buyCellOver);
+                    stockRanklist_dt.Add(stockRank);
+                }
+
+                //排序
+                stockRanklist_dt.Sort((x,y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
+                stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
+                MessageBox.Show($"{stockRanklist_dt.Count}");
+                dGV_StockRank.DataSource = stockRanklist_dt;
+
+
+
+                /*
+                dGV_List.DataSource = stockItems_dt;
+
+                //ComboBox更新
+                //先清空一次資料源
+                stockInformation_dt.Clear();
+                dGV_Items.DataSource = null;
+
+                //讀取新資料
+                getstockInformation_Search(stockID);
+                dGV_Items.DataSource = stockInformation_dt;*/
             }
         }
     }
