@@ -16,7 +16,8 @@ namespace Stock_Analysis
         private string columnName;
 
         private string text;
-        private StockItem stock;
+
+        //private StockItem stock;
         private StockRankItem stockRank;
 
         //建立開啟檔案的物件
@@ -24,6 +25,7 @@ namespace Stock_Analysis
 
         private string selected_Stock; //Combox的文字內容
         private List<StockItem> dt = new List<StockItem>(); //建立股票的所有資料，以List建立
+        private Dictionary<string, List<StockItem>> stock_database = new Dictionary<string, List<StockItem>>(); //整理成資料庫
 
         private List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資料陣列
         private List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
@@ -60,49 +62,77 @@ namespace Stock_Analysis
             //MessageBox.Show(odf.FileName);
             txtfile_address.Text = odf.FileName;
             lb_Status.Text = "讀取中";
-            FileStream file = new FileStream(txtfile_address.Text, FileMode.Open, FileAccess.Read, FileShare.None);
-            StreamReader sr = new StreamReader(file, System.Text.Encoding.GetEncoding("Big5"));
+            
 
-            //建立欄位名稱
-            columnName = sr.ReadLine(); //(思考其他寫法)
-            //以下建立欄位
-            string stockContent = sr.ReadLine();
-            while (!string.IsNullOrWhiteSpace(stockContent))
+            using (StreamReader sr = new StreamReader(txtfile_address.Text, System.Text.Encoding.GetEncoding("Big5")))
             {
-                stock = new StockItem(stockContent);
-                dt.Add(stock);
-                stockContent = sr.ReadLine();
-            }
-            dGV_List.DataSource = dt;
+                //建立欄位名稱
+                columnName = sr.ReadLine(); //(思考其他寫法)//以下建立欄位
+                string stockContent = sr.ReadLine();
+                while (!string.IsNullOrWhiteSpace(stockContent))
+                {
+                    StockItem stock = new StockItem(stockContent);
+                    dt.Add(stock);
+                    stockContent = sr.ReadLine();
+                }
+                //dt.Sort((x, y) => x.StockID.CompareTo(y.StockID)); //新增ID排序 (記憶體占比沒差多少)
+                dGV_List.DataSource = dt;
 
-            sw.Stop();
-            TimeSpan ts_dGV_List = sw.Elapsed;
+                sw.Stop();
+                TimeSpan ts_dGV_List = sw.Elapsed; //讀取完的時間
+            }
+
+            //建立StockID_List
+           // List<string> stockID_List = new List<string>();
+
+            ////資料整理
+            //foreach (StockItem item in dt)
+            //{
+            //    if (!stockID_List.Contains(item.StockID))
+            //    {
+            //        stockID_List.Add(item.StockID);
+            //    }
+            //}
+            //List<string> stocklist = new List<string>();
+            ////分類(第一正規化) 這邊在想一下
+            //foreach (string stockID in stockID_List)
+            //{
+            //    List<StockItem> ID_list = new List<StockItem>();
+            //    foreach (StockItem item in dt)
+            //    {
+            //        if (item.StockID.Equals(stockID))
+            //        {
+            //            ID_list.Add(item);
+            //        }
+            //    }
+            //    stock_database.Add(stockID, ID_list);
+            //    //stocklist.Add($"{stockID} - {stock_database.ContainsKey(stockID)}");
+            //}
+            //cbm_stocklist.DataSource = stocklist;
+            //// 建立combobox_list
+
+
 
             //combobox
             sw.Restart();
 
             //建立combolist
             List<string> stocklist = new List<string>();
-            Hashtable htb = new Hashtable(); //改Dictoinary
+            Dictionary<string,string> htb = new Dictionary<string, string>(); //改Dictoinary
             foreach (StockItem item in dt)
             {
-                if (htb.Contains(item.StockID))
+                if (!htb.ContainsKey(item.StockID))
                 {
-                    continue;
-                }
-                htb.Add(item.StockID, item.StockName);
+                    htb.Add(item.StockID, item.StockName);
+                }                
             }
-            foreach (DictionaryEntry item in htb)
+            foreach (KeyValuePair<string,string> item in htb)
             {
                 string name = $"{item.Key} - {item.Value}";
                 stocklist.Add(name);
             }
             cbm_stocklist.DataSource = stocklist;
 
-            //cbm_stocklist.SelectedIndex = -1;
-
-            //cbm_stocklist.DataSource = dt; //(ComboBox的問題在想一下，運行較久)
-            //cbm_stocklist.DisplayMember =
 
             sw.Stop();
             TimeSpan ts_cbm_stocklist = sw.Elapsed;
@@ -110,7 +140,7 @@ namespace Stock_Analysis
             //txt修改
             lb_Status.Text = "讀檔完成";
 
-            //richbox修改
+            richbox修改
             rtxt_ProcessStatus.Text = $"讀取時間: {ts_dGV_List}\nComboBox產生時間: {ts_cbm_stocklist}";
         }
 
@@ -152,7 +182,7 @@ namespace Stock_Analysis
         /// <param name="e"></param>
         private void btnStockSearch_Click(object sender, EventArgs e)
         {
-            Regex rergex = new Regex("^([A-9]{4,},){0,}$");
+            Regex rergex = new Regex("^([A-z0-9]{4,},){0,}$");
             if (rergex.IsMatch(selected_Stock))
             {
                 MessageBox.Show("Key in Word"); //=> 偵測用程式碼
