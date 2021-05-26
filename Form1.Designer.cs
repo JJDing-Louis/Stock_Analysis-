@@ -46,16 +46,19 @@ namespace Stock_Analysis
             // 
             // txtfile_address
             // 
-            this.txtfile_address.Location = new System.Drawing.Point(12, 12);
+            this.txtfile_address.Location = new System.Drawing.Point(16, 15);
+            this.txtfile_address.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtfile_address.Name = "txtfile_address";
-            this.txtfile_address.Size = new System.Drawing.Size(661, 22);
+            this.txtfile_address.Size = new System.Drawing.Size(880, 25);
             this.txtfile_address.TabIndex = 0;
+            this.txtfile_address.Text = "C:\\Users\\LouisDing\\Desktop\\20110315_Random.csv";
             // 
             // btnOpenFile
             // 
-            this.btnOpenFile.Location = new System.Drawing.Point(680, 12);
+            this.btnOpenFile.Location = new System.Drawing.Point(907, 15);
+            this.btnOpenFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnOpenFile.Name = "btnOpenFile";
-            this.btnOpenFile.Size = new System.Drawing.Size(75, 23);
+            this.btnOpenFile.Size = new System.Drawing.Size(100, 29);
             this.btnOpenFile.TabIndex = 2;
             this.btnOpenFile.Text = "讀取檔案";
             this.btnOpenFile.UseVisualStyleBackColor = true;
@@ -63,28 +66,31 @@ namespace Stock_Analysis
             // 
             // btnStockSearch
             // 
-            this.btnStockSearch.Location = new System.Drawing.Point(680, 40);
+            this.btnStockSearch.Location = new System.Drawing.Point(907, 50);
+            this.btnStockSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnStockSearch.Name = "btnStockSearch";
-            this.btnStockSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnStockSearch.Size = new System.Drawing.Size(100, 29);
             this.btnStockSearch.TabIndex = 3;
             this.btnStockSearch.Text = "股票查詢";
             this.btnStockSearch.UseVisualStyleBackColor = true;
             this.btnStockSearch.Click += new System.EventHandler(this.btnStockSearch_Click);
             // 
-            // lblStatus
+            // lb_Status
             // 
             this.lb_Status.AutoSize = true;
-            this.lb_Status.Location = new System.Drawing.Point(786, 17);
-            this.lb_Status.Name = "lblStatus";
-            this.lb_Status.Size = new System.Drawing.Size(53, 12);
+            this.lb_Status.Location = new System.Drawing.Point(1048, 21);
+            this.lb_Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_Status.Name = "lb_Status";
+            this.lb_Status.Size = new System.Drawing.Size(67, 15);
             this.lb_Status.TabIndex = 4;
             this.lb_Status.Text = "讀取狀態";
             // 
             // btnMarketingRank
             // 
-            this.btnMarketingRank.Location = new System.Drawing.Point(764, 40);
+            this.btnMarketingRank.Location = new System.Drawing.Point(1019, 50);
+            this.btnMarketingRank.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnMarketingRank.Name = "btnMarketingRank";
-            this.btnMarketingRank.Size = new System.Drawing.Size(95, 23);
+            this.btnMarketingRank.Size = new System.Drawing.Size(127, 29);
             this.btnMarketingRank.TabIndex = 5;
             this.btnMarketingRank.Text = "買賣超Top50";
             this.btnMarketingRank.UseVisualStyleBackColor = true;
@@ -92,54 +98,62 @@ namespace Stock_Analysis
             // 
             // rtxt_ProcessStatus
             // 
-            this.rtxt_ProcessStatus.Location = new System.Drawing.Point(865, 11);
+            this.rtxt_ProcessStatus.Location = new System.Drawing.Point(1153, 14);
+            this.rtxt_ProcessStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rtxt_ProcessStatus.Name = "rtxt_ProcessStatus";
-            this.rtxt_ProcessStatus.Size = new System.Drawing.Size(334, 62);
+            this.rtxt_ProcessStatus.Size = new System.Drawing.Size(444, 76);
             this.rtxt_ProcessStatus.TabIndex = 6;
             this.rtxt_ProcessStatus.Text = "";
             // 
             // dGV_List
             // 
             this.dGV_List.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dGV_List.Location = new System.Drawing.Point(12, 78);
+            this.dGV_List.Location = new System.Drawing.Point(16, 98);
+            this.dGV_List.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dGV_List.Name = "dGV_List";
+            this.dGV_List.RowHeadersWidth = 51;
             this.dGV_List.RowTemplate.Height = 24;
-            this.dGV_List.Size = new System.Drawing.Size(847, 267);
+            this.dGV_List.Size = new System.Drawing.Size(1129, 334);
             this.dGV_List.TabIndex = 7;
             // 
             // dGV_Items
             // 
             this.dGV_Items.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dGV_Items.Location = new System.Drawing.Point(12, 351);
+            this.dGV_Items.Location = new System.Drawing.Point(16, 439);
+            this.dGV_Items.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dGV_Items.Name = "dGV_Items";
+            this.dGV_Items.RowHeadersWidth = 51;
             this.dGV_Items.RowTemplate.Height = 24;
-            this.dGV_Items.Size = new System.Drawing.Size(847, 221);
+            this.dGV_Items.Size = new System.Drawing.Size(1129, 276);
             this.dGV_Items.TabIndex = 8;
             // 
             // dGV_StockRank
             // 
             this.dGV_StockRank.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dGV_StockRank.Location = new System.Drawing.Point(865, 79);
+            this.dGV_StockRank.Location = new System.Drawing.Point(1153, 99);
+            this.dGV_StockRank.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dGV_StockRank.Name = "dGV_StockRank";
+            this.dGV_StockRank.RowHeadersWidth = 51;
             this.dGV_StockRank.RowTemplate.Height = 24;
-            this.dGV_StockRank.Size = new System.Drawing.Size(334, 493);
+            this.dGV_StockRank.Size = new System.Drawing.Size(445, 616);
             this.dGV_StockRank.TabIndex = 9;
             // 
             // cbm_stocklist
             // 
             this.cbm_stocklist.FormattingEnabled = true;
-            this.cbm_stocklist.Location = new System.Drawing.Point(12, 42);
+            this.cbm_stocklist.Location = new System.Drawing.Point(16, 52);
+            this.cbm_stocklist.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbm_stocklist.Name = "cbm_stocklist";
-            this.cbm_stocklist.Size = new System.Drawing.Size(661, 20);
+            this.cbm_stocklist.Size = new System.Drawing.Size(880, 23);
             this.cbm_stocklist.TabIndex = 10;
             this.cbm_stocklist.SelectedIndexChanged += new System.EventHandler(this.cbm_stocklist_SelectedIndexChanged);
             this.cbm_stocklist.TextUpdate += new System.EventHandler(this.cbm_stocklist_TextUpdate);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1211, 584);
+            this.ClientSize = new System.Drawing.Size(1615, 730);
             this.Controls.Add(this.cbm_stocklist);
             this.Controls.Add(this.dGV_StockRank);
             this.Controls.Add(this.dGV_Items);
@@ -150,6 +164,7 @@ namespace Stock_Analysis
             this.Controls.Add(this.btnStockSearch);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.txtfile_address);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.dGV_List)).EndInit();
