@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace Stock_Analysis
 {
@@ -30,13 +30,19 @@ namespace Stock_Analysis
         private string selected_Stock; //Combox的文字內容
         private List<StockItem> dt = new List<StockItem>(); //建立股票的所有資料，以List建立
 
-        private List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資料陣列
+        private List<List<object>> stockInformation_dt = new List<List<object>>();//建立搜尋資料陣列
         private List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
 
         //以下BuyCellOver排序用
         private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料用的列表陣列
 
         private List<StockItem> stockRbufferList = new List<StockItem>();//RankBuffer
+
+
+
+        /// <summary>
+        /// group為整理好的資料
+        /// </summary>
 
         private Dictionary<string, List<StockItem>> group = new Dictionary<string, List<StockItem>>();
 
@@ -87,62 +93,14 @@ namespace Stock_Analysis
         }
 
         /// <summary>
-        /// 建立StockID_List
-        /// </summary>
-        private void setupStockID_List()
-        {
-            stockID_List = new List<string>();
-            foreach (var item in dt)
-            {
-                if (!stockID_List.Contains(item.StockID))
-                {
-                    stockID_List.Add(item.StockID);
-                }
-            }
-            GC.Collect();
-        }
-
-        private void sortData()
-        {
-            List<StockItem> stockItems = new List<StockItem>();
-            foreach (var item in stockID_List)
-            {
-                foreach (StockItem stock in dt)
-                {
-                    if (item.Equals(stock.StockID))
-                    {
-                        stockItems.Add(stock);
-                    }
-                }
-                stock_database.Add(item, stockItems);
-                stockItems.Clear();
-            }
-            //stock_database = dt.ToDictionary(key => key.StockID, value => value);
-        }
-
-        /// <summary>
         /// 建立Combobox
         /// </summary>
         private void setupCombobox()
         {
             stopwatch.Restart();
-            //Stopwatch sw = new Stopwatch(); //待建立全域變數
-            //List<string> stocklist = new List<string>();
-            //Dictionary<string, string> htb = new Dictionary<string, string>(); //改Dictoinary
-            //foreach (StockItem item in dt)
-            //{
-            //    if (!htb.ContainsKey(item.StockID))
-            //    {
-            //        htb.Add(item.StockID, item.StockName);
-            //    }
-            //}
-            //foreach (KeyValuePair<string, string> item in htb)
-            //{
-            //    string name = $"{item.Key} - {item.Value}";
-            //    stocklist.Add(name);
-            //}
-            cbm_stocklist.DataSource = group.Select(data=>data.Key).ToList();
-            
+
+            cbm_stocklist.DataSource = group.Select(data => $"{data.Key} - {data.Value[0].StockName}").ToList();
+
             stopwatch.Stop();
             TimeSpan ts_cbm_stocklist = stopwatch.Elapsed;
 
@@ -155,29 +113,27 @@ namespace Stock_Analysis
 
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
-            //using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            //{
-            //OpenFileDialog讀檔設定
-            //openFileDialog.InitialDirectory = @"C:\"; //預設檔案地址
-            //openFileDialog.Filter = "csv檔|*.csv|純文字檔|*.txt|所有檔案|*.*"; //預設檔案分類
-            //openFileDialog.FilterIndex = 0; //預設檔案的過濾項目
-            //openFileDialog.RestoreDirectory = true; //取得或設定值，指出對話方塊是否在關閉前將目錄還原至先前選取的目錄。
-            //openFileDialog.FileName = string.Empty; //取得或設定含有檔案對話方塊中所選取檔名的字串。
-            //openFileDialog.Multiselect = false; //不允許多選
-            //openFileDialog.ShowReadOnly = true; //設定唯獨
-            //openFileDialog.Title = "請選取股票資料"; //讀檔標題
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                //OpenFileDialog讀檔設定
+                openFileDialog.InitialDirectory = @"C:\"; //預設檔案地址
+                openFileDialog.Filter = "csv檔|*.csv|純文字檔|*.txt|所有檔案|*.*"; //預設檔案分類
+                openFileDialog.FilterIndex = 0; //預設檔案的過濾項目
+                openFileDialog.RestoreDirectory = true; //取得或設定值，指出對話方塊是否在關閉前將目錄還原至先前選取的目錄。
+                openFileDialog.FileName = string.Empty; //取得或設定含有檔案對話方塊中所選取檔名的字串。
+                openFileDialog.Multiselect = false; //不允許多選
+                openFileDialog.ShowReadOnly = true; //設定唯獨
+                openFileDialog.Title = "請選取股票資料"; //讀檔標題
 
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //  filePath = openFileDialog.FileName;
-            //txtfile_address.Text = openFileDialog.FileName;
-            //MessageBox.Show(filePath); //=>檢測用程式碼
-            readFile();
-            //setupStockID_List();
-            //sortData();
-            setupCombobox();
-            //  }
-            //}
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = openFileDialog.FileName;
+                    txtfile_address.Text = openFileDialog.FileName;
+                    //MessageBox.Show(filePath); //=>檢測用程式碼
+                    readFile();
+                    setupCombobox();
+                }
+            }
 
             //odf.ShowDialog();
         }
@@ -246,29 +202,22 @@ namespace Stock_Analysis
             {
                 MessageBox.Show("List Item Seach"); //=> 偵測用程式碼
 
-                //先清空一次資料源
-                stockItems_dt.Clear();
+                //先清空一次UI的資料源
                 dGV_List.DataSource = null;
+                dGV_Items.DataSource = null;
 
                 //開始查詢資料
                 string stockID = selected_Stock.Split(' ')[0];
-
-                foreach (StockItem stock in dt)
-                {
-                    if (stock.StockID.Equals(stockID))
-                    {
-                        stockItems_dt.Add(stock);
-                    }
-                }
-                dGV_List.DataSource = stockItems_dt;
+                dGV_List.DataSource = group[stockID];
 
                 //股票查詢資料更新更新
                 //先清空一次資料源
                 stockInformation_dt.Clear();
-                dGV_Items.DataSource = null;
+                stockInformation_dt.Add(getstockInformation_Search(stockID));
+
 
                 //讀取新資料
-                getstockInformation_Search(stockID);
+                
                 dGV_Items.DataSource = stockInformation_dt;
             }
         }
@@ -278,19 +227,33 @@ namespace Stock_Analysis
         /// 以ID搜尋
         /// </summary>
         /// <param name="stock"></param>
-        /// <returns></returns>
-        public void getstockInformation_Search(string stock)
+        /// <returns></returns> 
+        public List<object> getstockInformation_Search(string stockID) //在想一下
         {
             //以下為搜尋方法
-            string stockID = stock;
-            string stockName = getstockName(stock);
-            int buytotal = getBuyTotal(stockID);
-            int celltotal = getCellTotal(stockID);
-            double avgprice = getAvgPrice(getstockPrice(stockID), buytotal, celltotal);
-            int buycellover = (buytotal - celltotal);
-            int secbrokercnt = getSecBrokerCnt(stockID);
-            StockInformation stockInformation = new StockInformation(stock, stockName, buytotal, celltotal, avgprice, buycellover, secbrokercnt);
-            stockInformation_dt.Add(stockInformation);
+            List<StockItem> stockItems = group[stockID];
+            int buyTotal = 0; ;
+            int cellTotal = 0;
+            int buyCellOver = 0;
+            int secBrokerCnt = 0;
+            double avgPrice =0;
+            double sum = 0;
+            foreach (StockItem stock in stockItems)
+            {
+                buyTotal += int.Parse(stock.BuyQty);
+                cellTotal += int.Parse(stock.CellQty);
+                sum = double.Parse(stock.Price) * (int.Parse(stock.BuyQty) + int.Parse(stock.CellQty));
+            }
+            avgPrice = sum / (buyTotal + cellTotal);
+            buyCellOver = buyTotal - cellTotal;
+            List<object> stockdata = new List<object> { buyTotal, cellTotal, avgPrice, buyCellOver, secBrokerCnt };
+
+            return stockdata;
+
+
+            //avgPrice = 
+
+
         }
 
         /// <summary>
