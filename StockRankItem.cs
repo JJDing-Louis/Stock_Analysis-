@@ -12,10 +12,5 @@
             SecBrokerName = secBrokerName;
             BuyCellOver = buyCellOver;
         }
-
-        public string test()
-        {
-            return string.Empty;
-        }
     }
 }
