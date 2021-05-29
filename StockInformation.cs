@@ -1,24 +1,33 @@
-﻿namespace Stock_Analysis
-{
-    internal class StockInformation
-    {
-        public string StockID { get; }
-        public string StockName { get; }
-        public int BuyTotal { get; }
-        public int CellTotal { get; }
-        public double AvgPrice { get; }
-        public int BuyCellOver { get; }
-        public int SecBrokerCnt { get; }
+﻿using System.Collections.Generic;
 
-        public StockInformation(string stockID, string stockName, int buyTotal, int cellTotal, double avgPrice, int buyCellOver, int secBrokerCnt)
+namespace Stock_Analysis
+{
+    public class StockInformation
+    {
+        public string StockID { get; set; }
+        public string StockName { get; set; }
+        public int BuyTotal { get; set; }
+        public int CellTotal { get; set; }
+        public double AvgPrice { get; set; }
+        public int BuyCellOver { get; set; }
+        public int SecBrokerCnt { get; set; }
+
+        public StockInformation()
         {
-            StockID = stockID;
-            StockName = stockName;
-            BuyTotal = buyTotal;
-            CellTotal = cellTotal;
-            AvgPrice = avgPrice;
-            BuyCellOver = buyCellOver;
-            SecBrokerCnt = secBrokerCnt;
+            BuyTotal = 0;
+            CellTotal = 0;
+            BuyCellOver = 0;
+            SecBrokerCnt = 0;
+            AvgPrice = 0;
+            //Sum = 0;
+        }
+
+        public StockInformation Count(List<StockItem> a)
+        {
+
+
+            return new StockInformation();
+
         }
     }
 }

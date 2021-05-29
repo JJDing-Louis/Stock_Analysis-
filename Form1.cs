@@ -10,22 +10,17 @@ namespace Stock_Analysis
 {
     public partial class Form1 : Form
     {
-
-        private Stopwatch stopwatch = new Stopwatch(); //待建立全域變數        
-
-
-
         /// <summary>
         /// group為整理好的資料
         /// </summary>
         private Dictionary<string, List<StockItem>> group = new Dictionary<string, List<StockItem>>(); //讀取並整好的資料
-        private List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
-        private List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資股票欄位的資料
+
         private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料RankTop50用的資料
         private StockInformation stockInformation; //建立用在搜尋欄位的物件
-        private StockRankItem stockRank; //建立用在RankTop50的欄位物件
         private bool datatype = false; //紀錄輸入框的狀態
+        private Stopwatch stopwatch = new Stopwatch();
 
+        private Dictionary<string, List<string>> ColumnName = new Dictionary<string, List<string>>();//建立comboboxlist用的東西
 
         public Form1()
         {
@@ -44,46 +39,34 @@ namespace Stock_Analysis
                 //建立欄位名稱
                 sr.ReadLine(); //(思考其他寫法)//以下建立欄位
                 string stockContent = sr.ReadLine();
-                List<StockItem> allStock = new List<StockItem>();
-                group.Add("All", allStock);
+
+                ColumnName.Add("All", new List<string>()); //建立一組All的key,value
+
                 while (!string.IsNullOrWhiteSpace(stockContent))
                 {
                     StockItem stock = new StockItem(stockContent);
 
-                    List<StockItem> groupId;
-                    if (!group.TryGetValue(stock.StockID, out groupId))
+                    if (!group.TryGetValue(stock.StockID, out List<StockItem> groupId)) //利用Dic去查詢對應的Value，有則把List取出並加入stockitem，沒有則建立List
                     {
-                        groupId = new List<StockItem>();
-                        group.Add(stock.StockID, groupId);
+                        groupId = new List<StockItem>(); //建立Value(List<StockItem>)
+                        group.Add(stock.StockID, groupId);//加入一組Key,Value進入
+
+                        ColumnName.Add($"{stock.StockID} - {stock.StockName}", new List<string>() { stock.StockID }); //建立一組對照表
                     }
                     groupId.Add(stock);
-                    //allStock.Add(stock);
                     stockContent = sr.ReadLine();
                 }
-                foreach (List<StockItem> item in group.Values)
-                {
-                    allStock.AddRange(item);
-                }
-                //dt.Sort((x, y) => x.StockID.CompareTo(y.StockID)); //新增ID排序 (記憶體占比沒差多少)
-                dGV_List.DataSource = group["All"];
+
+                ColumnName["All"] = group.Select(data => data.Key).ToList(); //指定一組值到All的Value裡面
+
+
+                dGV_List.DataSource = group.SelectMany(data => data.Value).ToList(); //資料與dGV_List繫結
+                cbm_stocklist.DataSource = ColumnName.Select(data => data.Key).ToList(); //資料與combobox繫結
             }
             lb_Status.Text = "讀取完成";
         }
 
-        /// <summary>
-        /// 建立Combobox
-        /// </summary>
-        private void setupCombobox()
-        {
 
-            cbm_stocklist.DataSource = group.Select(data => $"{data.Key} - {data.Value[0].StockName}").ToList();
-
-
-            //txt修改
-            lb_Status.Text = "讀檔完成";
-
-
-        }
         /// <summary>
         /// 按下讀取檔案的觸發事件
         /// </summary>
@@ -108,15 +91,11 @@ namespace Stock_Analysis
                     txtfile_address.Text = openFileDialog.FileName;
                     stopwatch.Start();
                     readFile();
-                    stopwatch.Stop();
-                    rtxt_ProcessStatus.Text+= $"讀取時間: {stopwatch.Elapsed}\n";
+                    log_time("讀取");
                     stopwatch.Restart();
-                    setupCombobox();
-                    stopwatch.Stop();
-                    rtxt_ProcessStatus.Text += $"ComboBox產生時間: {stopwatch.Elapsed}\n";
+                    log_time("ComboBox產生");
                 }
             }
-
         }
 
         /// <summary>
@@ -124,36 +103,56 @@ namespace Stock_Analysis
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnStockSearch_Click(object sender, EventArgs e)
+        public void btnStockSearch_Click(object sender, EventArgs e)
         {
+            List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
+            List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資股票欄位的資料
+
+            if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
+            {
+                //單個.多個
+                allStockId = cbm_stocklist.Text.Split(',').ToList();
+            }
+
+
+
             stopwatch.Restart();
             if (datatype)
             {
-
-
                 //先清空一次dGV_List資料源
                 stockItems_dt.Clear();
                 dGV_List.DataSource = null; //UI先清空
                 //先清空一次dGV_Items資料源
                 stockInformation_dt.Clear();
                 dGV_Items.DataSource = null;
-                string[] stockID_list = cbm_stocklist.Text.Split(','); //取得Combox的文字內容
-                foreach (string stockID in stockID_list)
+                // string[] stockID_list = cbm_stocklist.Text.Split(','); //取得Combox的文字內容
+
+                List<StockItem> first= new List<StockItem>();
+                List< StockInformation > second= new List<StockInformation>();
+
+                foreach (string stockID in allStockId)
                 {
-                    getstockInformation_Search(stockID);
-                    stockInformation_dt.Add(stockInformation);
-                    foreach (var item in group[stockID])
-                    {
-                        stockItems_dt.Add(item);
-                    }
+                    List<StockItem> eee = group[stockID];
+
+                    //StockInformation test =;
+                    // 1
+                    first.AddRange(eee);
+                    // 2
+                    second.Add(new StockInformation().Count(eee));
+                    //Search(stockID);
+
+                    //stockInformation_dt.Add(stockInformation);
+                    //foreach (var item in group[stockID])
+                    //{
+                    //    stockItems_dt.Add(item);
+                    //}
                 }
                 dGV_List.DataSource = stockItems_dt;
-                dGV_Items.DataSource = stockInformation_dt;
+
+                dGV_Items.DataSource = second;
             }
             else
             {
-
-
                 //先清空一次UI的資料源
                 dGV_List.DataSource = null;
                 dGV_Items.DataSource = null;
@@ -165,15 +164,14 @@ namespace Stock_Analysis
                 //股票查詢資料更新更新
                 //先清空一次資料源
                 stockInformation_dt.Clear();
-                getstockInformation_Search(stockID);
+                var eee = Search(stockID);
                 stockInformation_dt.Add(stockInformation);
 
                 //讀取新資料
-
                 dGV_Items.DataSource = stockInformation_dt;
             }
-            stopwatch.Stop();
-            rtxt_ProcessStatus.Text += $"查詢時間: {stopwatch.Elapsed}\n";
+
+            log_time("查詢");
         }
 
         /// <summary>
@@ -183,6 +181,9 @@ namespace Stock_Analysis
         /// <param name="e">讀取檔案室建</param>
         private void cbm_stocklist_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string a = "1234";
+            List<string> ee = a.Split(',').ToList();
+
             datatype = false;
         }
 
@@ -202,31 +203,37 @@ namespace Stock_Analysis
         /// </summary>
         /// <param name="stockID"></param>
         /// <returns></returns>
-        public void getstockInformation_Search(string stockID) //在想一下如何簡化
+        public StockInformation Search(string stockID) //在想一下如何簡化
         {
             //以下為搜尋方法
-            List<StockItem> stockItems = group[stockID];
-            int buyTotal = 0; ;
-            int cellTotal = 0;
-            int buyCellOver = 0;
-            int secBrokerCnt = 0;
-            double avgPrice = 0;
+            //List<StockItem> stockItems = group[stockID];
+
+            StockInformation test = new StockInformation();
+            StockInformation a = test.Count(group[stockID]);
+            //int buyTotal = 0; ;
+            //int cellTotal = 0;
+            //int buyCellOver = 0;
+            //int secBrokerCnt = 0;
+            //double avgPrice = 0;
             double sum = 0;
-            List<string> secBrokerID_List = new List<string>();
-            foreach (StockItem stock in stockItems)
-            {
-                buyTotal += int.Parse(stock.BuyQty);
-                cellTotal += int.Parse(stock.CellQty);
-                sum = double.Parse(stock.Price) * (int.Parse(stock.BuyQty) + int.Parse(stock.CellQty));
-                if (!secBrokerID_List.Contains(stock.SecBrokerID))
-                {
-                    secBrokerID_List.Add(stock.SecBrokerID);
-                }
-            }
-            avgPrice = sum / (buyTotal + cellTotal);
-            buyCellOver = buyTotal - cellTotal;
-            secBrokerCnt = secBrokerID_List.Count;
-            stockInformation = new StockInformation(stockID, stockItems[0].StockName, buyTotal, cellTotal, avgPrice, buyCellOver, secBrokerCnt);
+
+            //List<string> secBrokerID_List = new List<string>();
+
+            //foreach (StockItem stock in stockItems)
+            //{
+            //    buyTotal += int.Parse(stock.BuyQty);
+            //    cellTotal += int.Parse(stock.CellQty);
+            //    sum = double.Parse(stock.Price) * (int.Parse(stock.BuyQty) + int.Parse(stock.CellQty));
+            //    if (!secBrokerID_List.Contains(stock.SecBrokerID))
+            //    {
+            //        secBrokerID_List.Add(stock.SecBrokerID);
+            //    }
+            //}
+            //avgPrice = sum / (buyTotal + cellTotal);
+            //buyCellOver = buyTotal - cellTotal;
+            //secBrokerCnt = secBrokerID_List.Count;
+            //stockInformation = new StockInformation(stockID, stockItems[0].StockName, buyTotal, cellTotal, avgPrice, buyCellOver, secBrokerCnt);
+            return test;
         }
 
         /// <summary>
@@ -242,8 +249,6 @@ namespace Stock_Analysis
                 //先清空一次資料源
                 stockRanklist_dt.Clear();
                 dGV_StockRank.DataSource = null;
-
-
                 string[] stockID_List = cbm_stocklist.Text.Split(','); //取得Combox的文字內容
                 foreach (string stockID in stockID_List)
                 {
@@ -257,22 +262,27 @@ namespace Stock_Analysis
                 //先清空一次資料源
                 stockRanklist_dt.Clear();
                 dGV_StockRank.DataSource = null;
-
                 //開始查詢資料
                 string stockID = cbm_stocklist.Text.Split(' ')[0]; //取得Combox的文字內容
                 mergesecBroker(stockID);
                 //排序與顯示前50筆資料
                 sortRank();
             }
+
+            log_time("買賣超Top50");
+        }
+
+        private void log_time(string message) //筆記!!!
+        {
+            rtxt_ProcessStatus.Text = $"{rtxt_ProcessStatus.Text} {message}時間:{stopwatch.Elapsed.ToString(@"hh\:mm\:ss\:fff")}{Environment.NewLine}";
             stopwatch.Stop();
-            rtxt_ProcessStatus.Text += $"買賣超Top50 產生時間: {stopwatch.Elapsed}\n";
         }
 
         /// <summary>
         /// 券商名稱整併與稀出
         /// </summary>
         /// <param name="stockID">輸入股票ID</param>
-        private void mergesecBroker(string stockID)
+        private void mergesecBroker(string stockID) //再想一下如何簡化
         {
             //合併相同的SecBrokerID
             List<string> secBroker_List = new List<string>();
@@ -300,7 +310,7 @@ namespace Stock_Analysis
                     }
                 }
                 buyCellOver = buyTotal - cellTotal;
-                stockRank = new StockRankItem(stockName, secBroker, buyCellOver);
+                StockRankItem stockRank = new StockRankItem(stockName, secBroker, buyCellOver);
                 stockRanklist_dt.Add(stockRank);
             }
         }
@@ -315,8 +325,6 @@ namespace Stock_Analysis
             {
                 stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
             }
-
-            //MessageBox.Show($"{stockRanklist_dt.Count}");
             dGV_StockRank.DataSource = stockRanklist_dt;
         }
     }

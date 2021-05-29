@@ -1,6 +1,6 @@
 ﻿namespace Stock_Analysis
 {
-    internal class StockItem
+    public class StockItem
     {
         public string DealDate { get; }
         public string StockID { get; }
