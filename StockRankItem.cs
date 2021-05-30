@@ -4,12 +4,9 @@ namespace Stock_Analysis
 {
     internal class StockRankItem
     {
-
         public string StockName { get; set; }
         public string SecBrokerName { get; set; }
         public int BuyCellOver { get; set; }
-
-
 
         public StockRankItem()
         {
@@ -30,7 +27,6 @@ namespace Stock_Analysis
             List<StockRankItem> secBrokerList = new List<StockRankItem>();
             List<string> secBroker_List = new List<string>();
 
-
             //建立劵商名稱的對照表
             foreach (StockItem stock in stockItems)
             {
@@ -40,7 +36,8 @@ namespace Stock_Analysis
                 }
             }
 
-            foreach (string secBroker in secBroker_List) //先取secBroker
+            //先取secBroker
+            foreach (string secBroker in secBroker_List)
             {
                 SecBrokerName = secBroker;
                 int BuyTotal = 0; //再在想一下
@@ -59,7 +56,6 @@ namespace Stock_Analysis
                 secBrokerList.Add(stockRankItem);
             }
             return secBrokerList;
-
         }
     }
 }

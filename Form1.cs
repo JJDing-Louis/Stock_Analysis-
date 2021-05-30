@@ -18,7 +18,7 @@ namespace Stock_Analysis
         private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料RankTop50用的資料
         private Stopwatch stopwatch = new Stopwatch();
         private Dictionary<string, List<string>> ColumnName = new Dictionary<string, List<string>>();//建立comboboxlist用的東西 (股票ID對照表)
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -69,18 +69,6 @@ namespace Stock_Analysis
         /// <param name="e"></param>
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
-           /* int i ;
-
-            string j = string.Empty;
-            StockInformation k;
-            List<StockInformation> l = new List<StockInformation>();
-            List<string> t = new List<string>();
-            Timer a;
-            Dictionary<string, string> y;
-            char u;
-            bool o;
-            testtest(j, t);*/
-
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 //OpenFileDialog讀檔設定
@@ -105,7 +93,6 @@ namespace Stock_Analysis
             }
         }
 
-        /// <summary>
         /// 按下按鈕開始搜尋，判定搜尋條件，並建立清單
         /// </summary>
         /// <param name="sender"></param>
@@ -115,7 +102,7 @@ namespace Stock_Analysis
             stopwatch.Restart();//開始計時
             List<StockItem> stockItems_dt = new List<StockItem>(); //建立搜尋資料用的列表陣列
             List<StockInformation> stockInformation_dt = new List<StockInformation>();//建立搜尋資股票欄位的資料
-            StockInformation stockInformation = new StockInformation(); //建立StockInformation物件(功能二使用)
+            //StockInformation stockInformation = new StockInformation(); //建立StockInformation物件(功能二使用)
 
             if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
@@ -128,9 +115,12 @@ namespace Stock_Analysis
             {
                 //處裡dGV_List
                 List<StockItem> stockItems = group[stockID];
+
+                //
                 stockItems_dt.AddRange(stockItems);
+
                 //處裡dGV_Item
-                stockInformation_dt.Add(stockInformation.getInformation(group[stockID]));
+                stockInformation_dt.Add(new StockInformation().getInformation(group[stockID]));
             }
             dGV_List.DataSource = stockItems_dt; //dGV_List的繫結
             dGV_Items.DataSource = stockInformation_dt; //dGV_Item的繫結
@@ -145,7 +135,7 @@ namespace Stock_Analysis
         private void btnMarketingRank_Click(object sender, EventArgs e)
         {
             stopwatch.Restart();//開始計時
-            StockRankItem stockRankItem = new StockRankItem();
+            //StockRankItem stockRankItem = new StockRankItem();
 
             if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
@@ -155,7 +145,7 @@ namespace Stock_Analysis
 
             foreach (string stockID in allStockId)
             {
-                stockRanklist_dt.AddRange(stockRankItem.mergeSecBroker(group[stockID]));
+                stockRanklist_dt.AddRange(new StockRankItem().mergeSecBroker(group[stockID]));
             }
             sortRank();
             log_time("買賣超Top50");
@@ -168,16 +158,16 @@ namespace Stock_Analysis
         {
             List<StockRankItem> ranklist = new List<StockRankItem>();
             stockRanklist_dt.Sort((x, y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
-            if (stockRanklist_dt[0].BuyCellOver>0) //BuyCellOver大到小排序，最大值小於零，不排
+            if (stockRanklist_dt[0].BuyCellOver > 0) //BuyCellOver大到小排序，最大值小於零，不排
             {
                 int index = stockRanklist_dt.FindIndex(data => data.BuyCellOver < 0);
-                if (index>50)
+                if (index > 50)
                 {
                     ranklist.AddRange(stockRanklist_dt.GetRange(0, 50));
                 }
                 else
                 {
-                    ranklist.AddRange(stockRanklist_dt.GetRange(0, index));
+                    ranklist.AddRange(stockRanklist_dt);
                 }
             }
             stockRanklist_dt.Sort((x, y) => x.BuyCellOver.CompareTo(y.BuyCellOver));
@@ -190,10 +180,9 @@ namespace Stock_Analysis
                 }
                 else
                 {
-                    ranklist.AddRange(stockRanklist_dt.GetRange(0, index));
+                    ranklist.AddRange(stockRanklist_dt);
                 }
             }
-
 
             MessageBox.Show($"{ranklist.Count}");
             dGV_StockRank.DataSource = ranklist;
@@ -201,8 +190,8 @@ namespace Stock_Analysis
 
         private void log_time(string message) //筆記!!!
         {
-            rtxt_ProcessStatus.Text = $"{rtxt_ProcessStatus.Text} {message}時間:{stopwatch.Elapsed.ToString(@"hh\:mm\:ss\:fff")}{Environment.NewLine}";
             stopwatch.Stop();
+            rtxt_ProcessStatus.Text = $"{rtxt_ProcessStatus.Text} {message}時間:{stopwatch.Elapsed.ToString(@"hh\:mm\:ss\:fff")}{Environment.NewLine}";
         }
     }
 }
