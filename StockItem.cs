@@ -23,11 +23,5 @@
             BuyQty = Data[6];
             CellQty = Data[7];
         }
-
-        public string[] getStockItem()
-        {
-            string[] data = new string[] { DealDate, StockID, StockName, SecBrokerID, SecBrokerName, Price, BuyQty, CellQty };
-            return data;
-        }
     }
 }
