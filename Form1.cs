@@ -18,7 +18,7 @@ namespace Stock_Analysis
         private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料RankTop50用的資料
         private Stopwatch stopwatch = new Stopwatch();
         private Dictionary<string, List<string>> ColumnName = new Dictionary<string, List<string>>();//建立comboboxlist用的東西 (股票ID對照表)
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -159,8 +159,6 @@ namespace Stock_Analysis
             }
             sortRank();
             log_time("買賣超Top50");
-
-            dGV_StockRank.DataSource = stockRanklist_dt;
         }
 
         /// <summary>
@@ -170,19 +168,33 @@ namespace Stock_Analysis
         {
             List<StockRankItem> ranklist = new List<StockRankItem>();
             stockRanklist_dt.Sort((x, y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
-            if (stockRanklist_dt.Count > 50)
+            if (stockRanklist_dt[0].BuyCellOver>0) //BuyCellOver大到小排序，最大值小於零，不排
             {
-                stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
-                ranklist.AddRange(stockRanklist_dt);
+                int index = stockRanklist_dt.FindIndex(data => data.BuyCellOver < 0);
+                if (index>50)
+                {
+                    ranklist.AddRange(stockRanklist_dt.GetRange(0, 50));
+                }
+                else
+                {
+                    ranklist.AddRange(stockRanklist_dt.GetRange(0, index));
+                }
+            }
+            stockRanklist_dt.Sort((x, y) => x.BuyCellOver.CompareTo(y.BuyCellOver));
+            if (stockRanklist_dt[0].BuyCellOver < 0) //BuyCellOver小到大排序，最大值大於零，不排
+            {
+                int index = stockRanklist_dt.FindIndex(data => data.BuyCellOver > 0);
+                if (index > 50)
+                {
+                    ranklist.AddRange(stockRanklist_dt.GetRange(0, 50));
+                }
+                else
+                {
+                    ranklist.AddRange(stockRanklist_dt.GetRange(0, index));
+                }
             }
 
-            //倒序
-            //stockRanklist_dt.Sort((x, y) => x.BuyCellOver.CompareTo(y.BuyCellOver));
-            //if (stockRanklist_dt.Count > 50)
-            //{
-            //    stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
-            //    ranklist.AddRange(stockRanklist_dt);
-            //}
+
             MessageBox.Show($"{ranklist.Count}");
             dGV_StockRank.DataSource = ranklist;
         }
@@ -191,14 +203,6 @@ namespace Stock_Analysis
         {
             rtxt_ProcessStatus.Text = $"{rtxt_ProcessStatus.Text} {message}時間:{stopwatch.Elapsed.ToString(@"hh\:mm\:ss\:fff")}{Environment.NewLine}";
             stopwatch.Stop();
-        }
-
-        //call by value
-        //call by referernce
-        private void testtest(string i, List<string> testString)
-        {
-            i = "12";
-            testString.Add("123");
         }
     }
 }

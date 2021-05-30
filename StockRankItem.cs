@@ -30,6 +30,8 @@ namespace Stock_Analysis
             List<StockRankItem> secBrokerList = new List<StockRankItem>();
             List<string> secBroker_List = new List<string>();
 
+
+            //建立劵商名稱的對照表
             foreach (StockItem stock in stockItems)
             {
                 if (!secBroker_List.Contains(stock.SecBrokerName))
