@@ -69,6 +69,18 @@ namespace Stock_Analysis
         /// <param name="e"></param>
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
+           /* int i ;
+
+            string j = string.Empty;
+            StockInformation k;
+            List<StockInformation> l = new List<StockInformation>();
+            List<string> t = new List<string>();
+            Timer a;
+            Dictionary<string, string> y;
+            char u;
+            bool o;
+            testtest(j, t);*/
+
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 //OpenFileDialog讀檔設定
@@ -125,16 +137,15 @@ namespace Stock_Analysis
             log_time("查詢");
         }
 
-         /// <summary>
+        /// <summary>
         /// 按下Top50 Rank
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnMarketingRank_Click(object sender, EventArgs e)
         {
-
             stopwatch.Restart();//開始計時
-            StockRankItem stockRankItem = new StockRankItem(); 
+            StockRankItem stockRankItem = new StockRankItem();
 
             if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
@@ -152,25 +163,42 @@ namespace Stock_Analysis
             dGV_StockRank.DataSource = stockRanklist_dt;
         }
 
-
-
         /// <summary>
         /// Top50資料排序
         /// </summary>
         private void sortRank()
         {
+            List<StockRankItem> ranklist = new List<StockRankItem>();
             stockRanklist_dt.Sort((x, y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
             if (stockRanklist_dt.Count > 50)
             {
                 stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
+                ranklist.AddRange(stockRanklist_dt);
             }
-            dGV_StockRank.DataSource = stockRanklist_dt;
+
+            //倒序
+            //stockRanklist_dt.Sort((x, y) => x.BuyCellOver.CompareTo(y.BuyCellOver));
+            //if (stockRanklist_dt.Count > 50)
+            //{
+            //    stockRanklist_dt.RemoveRange(50, (stockRanklist_dt.Count - 50));
+            //    ranklist.AddRange(stockRanklist_dt);
+            //}
+            MessageBox.Show($"{ranklist.Count}");
+            dGV_StockRank.DataSource = ranklist;
         }
 
         private void log_time(string message) //筆記!!!
         {
             rtxt_ProcessStatus.Text = $"{rtxt_ProcessStatus.Text} {message}時間:{stopwatch.Elapsed.ToString(@"hh\:mm\:ss\:fff")}{Environment.NewLine}";
             stopwatch.Stop();
+        }
+
+        //call by value
+        //call by referernce
+        private void testtest(string i, List<string> testString)
+        {
+            i = "12";
+            testString.Add("123");
         }
     }
 }

@@ -18,11 +18,11 @@ namespace Stock_Analysis
             BuyCellOver = 0;
         }
 
-        public StockRankItem(string stockName, string secBrokerName, int buyCellOver) //建構子多載
+        public StockRankItem(string stockname, string secbrokername, int buycellover) //建構子多載
         {
-            StockName = stockName;
-            SecBrokerName = secBrokerName;
-            BuyCellOver = buyCellOver;
+            StockName = stockname;
+            SecBrokerName = secbrokername;
+            BuyCellOver = buycellover;
         }
 
         public List<StockRankItem> mergeSecBroker(List<StockItem> stockItems)

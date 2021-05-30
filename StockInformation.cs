@@ -11,44 +11,13 @@ namespace Stock_Analysis
         public double AvgPrice { get; set; }
         public int BuyCellOver { get; set; }
         public int SecBrokerCnt { get; set; }
-
-        public StockInformation()
-        {
-            StockID = string.Empty;
-            StockName = string.Empty;
-            BuyTotal = 0;
-            CellTotal = 0;
-            AvgPrice = 0;
-            BuyCellOver = 0;
-            SecBrokerCnt = 0;
-        }
-
-        /// <summary>
-        /// 建構子多載
-        /// </summary>
-        /// <param name="stockID">輸入股票ID</param>
-        /// <param name="stockName"></param>
-        /// <param name="buyTotal"></param>
-        /// <param name="cellTotal"></param>
-        /// <param name="avgPrice"></param>
-        /// <param name="buyCellOver"></param>
-        /// <param name="secBrokerCnt"></param>
-        public StockInformation(string stockID, string stockName, int buyTotal, int cellTotal, double avgPrice, int buyCellOver, int secBrokerCnt)
-        {
-            StockID = stockID;
-            StockName = stockName;
-            BuyTotal = buyTotal;
-            CellTotal = cellTotal;
-            AvgPrice = avgPrice;
-            BuyCellOver = buyCellOver;
-            SecBrokerCnt = secBrokerCnt;
-        }
+        public double sum { get; set; }
 
         public StockInformation getInformation(List<StockItem> stockID)
         {
             StockID = stockID[0].StockID;
             StockName = stockID[0].StockName;
-            double sum = 0;
+            //double sum = 0; //驗證中
 
             List<string> secBrokerID_List = new List<string>();
             foreach (StockItem stock in stockID)
@@ -65,9 +34,7 @@ namespace Stock_Analysis
             BuyCellOver = BuyTotal - CellTotal;
             SecBrokerCnt = secBrokerID_List.Count;
 
-            StockInformation stockInformation = new StockInformation(StockID, StockName, BuyTotal, CellTotal, AvgPrice, BuyCellOver, SecBrokerCnt);
-
-            return stockInformation;
+            return this;
         }
     }
 }
