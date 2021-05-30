@@ -145,8 +145,7 @@ namespace Stock_Analysis
             this.cbm_stocklist.Name = "cbm_stocklist";
             this.cbm_stocklist.Size = new System.Drawing.Size(880, 23);
             this.cbm_stocklist.TabIndex = 10;
-            this.cbm_stocklist.SelectedIndexChanged += new System.EventHandler(this.cbm_stocklist_SelectedIndexChanged);
-            this.cbm_stocklist.TextUpdate += new System.EventHandler(this.cbm_stocklist_TextUpdate);
+
             // 
             // Form1
             // 

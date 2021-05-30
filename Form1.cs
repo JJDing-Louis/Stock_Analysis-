@@ -132,71 +132,27 @@ namespace Stock_Analysis
         /// <param name="e"></param>
         private void btnMarketingRank_Click(object sender, EventArgs e)
         {
-            stopwatch.Restart();
-            if (datatype)
+
+            stopwatch.Restart();//開始計時
+            StockRankItem stockRankItem = new StockRankItem(); 
+
+            if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
-                //先清空一次資料源
-                stockRanklist_dt.Clear();
-                dGV_StockRank.DataSource = null;
-                string[] stockID_List = cbm_stocklist.Text.Split(','); //取得Combox的文字內容
-                foreach (string stockID in stockID_List)
-                {
-                    mergesecBroker(stockID);
-                }
-                //排序與顯示前50筆資料
-                sortRank();
-            }
-            else
-            {
-                //先清空一次資料源
-                stockRanklist_dt.Clear();
-                dGV_StockRank.DataSource = null;
-                //開始查詢資料
-                string stockID = cbm_stocklist.Text.Split(' ')[0]; //取得Combox的文字內容
-                mergesecBroker(stockID);
-                //排序與顯示前50筆資料
-                sortRank();
+                //單筆.多筆股票查詢
+                allStockId = cbm_stocklist.Text.Split(',').ToList();
             }
 
+            foreach (string stockID in allStockId)
+            {
+                stockRanklist_dt.AddRange(stockRankItem.mergeSecBroker(group[stockID]));
+            }
+            sortRank();
             log_time("買賣超Top50");
+
+            dGV_StockRank.DataSource = stockRanklist_dt;
         }
 
-        /// <summary>
-        /// 券商名稱整併與稀出
-        /// </summary>
-        /// <param name="stockID">輸入股票ID</param>
-        private void mergesecBroker(string stockID) //再想一下如何簡化
-        {
-            //合併相同的SecBrokerID
-            List<string> secBroker_List = new List<string>();
-            foreach (StockItem stock in group[stockID])
-            {
-                if (!secBroker_List.Contains(stock.SecBrokerName))
-                {
-                    secBroker_List.Add(stock.SecBrokerName);
-                }
-            }
 
-            foreach (string secBroker in secBroker_List) //先取secBroker
-            {
-                string stockName = string.Empty;
-                int buyTotal = 0;
-                int cellTotal = 0;
-                int buyCellOver = 0;
-                foreach (StockItem stock in group[stockID])//比對各項
-                {
-                    stockName = stock.StockName;
-                    if (stock.SecBrokerName.Equals(secBroker))
-                    {
-                        buyTotal += int.Parse(stock.BuyQty);
-                        cellTotal += int.Parse(stock.CellQty);
-                    }
-                }
-                buyCellOver = buyTotal - cellTotal;
-                StockRankItem stockRank = new StockRankItem(stockName, secBroker, buyCellOver);
-                stockRanklist_dt.Add(stockRank);
-            }
-        }
 
         /// <summary>
         /// Top50資料排序
