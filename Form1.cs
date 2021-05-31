@@ -19,6 +19,16 @@ namespace Stock_Analysis
         private Stopwatch stopwatch = new Stopwatch();
         private Dictionary<string, List<string>> ColumnName = new Dictionary<string, List<string>>();//建立comboboxlist用的東西 (股票ID對照表)
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 用ID去對證券名稱
+        Dictionary<string, Dictionary<string, StockRankItem>> groupSecBroker = new Dictionary<string, Dictionary<string, StockRankItem>>();
+        /// 用證券名稱做key,value
+        //Dictionary<string, StockRankItem> secBroker = new Dictionary<string, StockRankItem>();
+
+
+
         public Form1()
         {
             InitializeComponent();
@@ -47,8 +57,35 @@ namespace Stock_Analysis
                     {
                         groupId = new List<StockItem>(); //建立Value(List<StockItem>)
                         group.Add(stock.StockID, groupId);//加入一組Key,Value進入
-
                         ColumnName.Add($"{stock.StockID} - {stock.StockName}", new List<string>() { stock.StockID }); //建立一組對照表
+
+                    }
+
+                    /////Rank表單建立
+                    if (groupSecBroker.TryGetValue(stock.StockID, out Dictionary<string, StockRankItem> secBroker))
+                    {
+                        //secBroker = new Dictionary<string, StockRankItem>();
+                        if (secBroker.TryGetValue(stock.SecBrokerName, out StockRankItem stockRankItem))
+                        {
+                            stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
+                        }
+                        else
+                        {
+                            stockRankItem = new StockRankItem(stock.StockName, stock.SecBrokerName, 0);
+                            stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
+                            secBroker.Add(stock.SecBrokerName, stockRankItem);
+
+                            //groupSecBroker.Add(stock.StockID, secBroker);
+                        }
+                        stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
+                    }
+                    else
+                    {
+                        secBroker = new Dictionary<string, StockRankItem>();
+                        StockRankItem stockRankItem = new StockRankItem(stock.StockName, stock.SecBrokerName, 0);
+                        stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
+                        secBroker.Add(stock.SecBrokerName, stockRankItem);
+                        groupSecBroker.Add(stock.StockID, secBroker);  
                     }
                     groupId.Add(stock);
                     stockContent = sr.ReadLine();
@@ -137,16 +174,25 @@ namespace Stock_Analysis
             stopwatch.Restart();//開始計時
             //StockRankItem stockRankItem = new StockRankItem();
 
+
+            //foreach (List<StockItem> stockItems in group.Values)
+            //{
+            //    if (groupSecBroker.TryGetValue(stockItems))
+            //    {
+
+            //    }
+            //}
+
             if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
                 //單筆.多筆股票查詢
                 allStockId = cbm_stocklist.Text.Split(',').ToList();
             }
 
-            foreach (string stockID in allStockId)
-            {
-                stockRanklist_dt.AddRange(new StockRankItem().mergeSecBroker(group[stockID]));
-            }
+            //foreach (string stockID in allStockId)
+            //{
+            //    stockRanklist_dt.AddRange(new StockRankItem().mergeSecBroker(group[stockID]));
+            //}
             sortRank();
             log_time("買賣超Top50");
         }
