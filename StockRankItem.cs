@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Stock_Analysis
+﻿namespace Stock_Analysis
 {
     internal class StockRankItem
     {
@@ -10,14 +8,7 @@ namespace Stock_Analysis
         private int BuyTotal { get; set; }
         private int CellTotal { get; set; }
 
-        //public StockRankItem()
-        //{
-        //    StockName = string.Empty;
-        //    SecBrokerName = string.Empty;
-        //    BuyCellOver = 0;
-        //}
-
-        public StockRankItem(string stockname, string secbrokername, int buycellover) //建構子多載
+        public StockRankItem(string stockname, string secbrokername, int buycellover)
         {
             StockName = stockname;
             SecBrokerName = secbrokername;

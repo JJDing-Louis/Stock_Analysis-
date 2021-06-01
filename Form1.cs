@@ -60,18 +60,12 @@ namespace Stock_Analysis
                     /////Rank表單建立
                     if (groupSecBroker.TryGetValue(stock.StockID, out Dictionary<string, StockRankItem> secBroker))
                     {
-                        //secBroker = new Dictionary<string, StockRankItem>();
-                        if (secBroker.TryGetValue(stock.SecBrokerName, out StockRankItem stockRankItem))
-                        {
-                            stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
-                        }
-                        else
+
+                        if (!secBroker.TryGetValue(stock.SecBrokerName, out StockRankItem stockRankItem))
                         {
                             stockRankItem = new StockRankItem(stock.StockName, stock.SecBrokerName, 0);
                             stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
                             secBroker.Add(stock.SecBrokerName, stockRankItem);
-
-                            //groupSecBroker.Add(stock.StockID, secBroker);
                         }
                         stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
                     }
@@ -219,7 +213,7 @@ namespace Stock_Analysis
                 }
             }
 
-            MessageBox.Show($"{ranklist.Count}");
+            //MessageBox.Show($"{ranklist.Count}");
             dGV_StockRank.DataSource = ranklist;
         }
 

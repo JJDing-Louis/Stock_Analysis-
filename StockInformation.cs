@@ -12,8 +12,6 @@ namespace Stock_Analysis
         public int BuyCellOver { get; set; }
         public int SecBrokerCnt { get; set; }
 
-
-
         public StockInformation getInformation(List<StockItem> stockID)
         {
             StockID = stockID[0].StockID;
