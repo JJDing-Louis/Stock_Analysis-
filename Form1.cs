@@ -24,10 +24,6 @@ namespace Stock_Analysis
         /// </summary>
         /// 用ID去對證券名稱
         Dictionary<string, Dictionary<string, StockRankItem>> groupSecBroker = new Dictionary<string, Dictionary<string, StockRankItem>>();
-        /// 用證券名稱做key,value
-        //Dictionary<string, StockRankItem> secBroker = new Dictionary<string, StockRankItem>();
-
-
 
         public Form1()
         {
@@ -172,16 +168,7 @@ namespace Stock_Analysis
         private void btnMarketingRank_Click(object sender, EventArgs e)
         {
             stopwatch.Restart();//開始計時
-            //StockRankItem stockRankItem = new StockRankItem();
 
-
-            //foreach (List<StockItem> stockItems in group.Values)
-            //{
-            //    if (groupSecBroker.TryGetValue(stockItems))
-            //    {
-
-            //    }
-            //}
 
             if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
@@ -189,10 +176,12 @@ namespace Stock_Analysis
                 allStockId = cbm_stocklist.Text.Split(',').ToList();
             }
 
-            //foreach (string stockID in allStockId)
-            //{
-            //    stockRanklist_dt.AddRange(new StockRankItem().mergeSecBroker(group[stockID]));
-            //}
+            foreach (string stock in allStockId)
+            {
+                stockRanklist_dt.AddRange(groupSecBroker[stock].Select(data => data.Value).ToList());
+            }
+
+
             sortRank();
             log_time("買賣超Top50");
         }
