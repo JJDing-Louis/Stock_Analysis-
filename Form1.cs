@@ -11,20 +11,35 @@ namespace Stock_Analysis
     public partial class Form1 : Form
     {
         /// <summary>
-        /// group為整理好的資料
+        /// group為csv檔讀取完成後，並整理好的資料空間
         /// </summary>
-        private Dictionary<string, List<StockItem>> group = new Dictionary<string, List<StockItem>>(); //讀取並整好的資料
-
-        private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>(); //建立排名資料RankTop50用的資料
-        private Stopwatch stopwatch = new Stopwatch();
-        private Dictionary<string, List<string>> ColumnName = new Dictionary<string, List<string>>();//建立comboboxlist用的東西 (股票ID對照表)
+        private Dictionary<string, List<StockItem>> group = new Dictionary<string, List<StockItem>>();
 
         /// <summary>
-        /// 
+        ///  stockRanklist_dt為secBroker讀取完後的資料空間，放置此區域做排序
+        /// </summary>
+        private List<StockRankItem> stockRanklist_dt = new List<StockRankItem>();
+
+        /// <summary>
+        /// stopwatch為碼錶
+        /// </summary>
+        private Stopwatch stopwatch = new Stopwatch();
+
+        /// <summary>
+        /// ColumnName為建立好建立comboboxlist用的列表 (股票ID對照表)
+        /// </summary>
+        private Dictionary<string, List<string>> ColumnName = new Dictionary<string, List<string>>();
+
+        /// <summary>
+        /// groupSecBroker是讀取好的，另一個csv檔的查詢用的，券商代號的資料空間
         /// </summary>
         /// 用ID去對證券名稱
-        Dictionary<string, Dictionary<string, StockRankItem>> groupSecBroker = new Dictionary<string, Dictionary<string, StockRankItem>>();
+        private Dictionary<string, Dictionary<string, StockRankItem>> groupSecBroker = new Dictionary<string, Dictionary<string, StockRankItem>>();
 
+        /// <summary>
+        /// 初始化設定
+        /// 目前沒東西
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -39,28 +54,31 @@ namespace Stock_Analysis
 
             using (StreamReader sr = new StreamReader(txtfile_address.Text, Encoding.GetEncoding("Big5")))
             {
-                //建立欄位名稱
-                sr.ReadLine(); //(思考其他寫法)//以下建立欄位
+                //只讀取csv檔的開頭標題
+                sr.ReadLine();
+                //開始讀取資料
                 string stockContent = sr.ReadLine();
 
-                ColumnName.Add("All", new List<string>()); //建立一組All的key,value
+                //建立一組All的key,value
+                ColumnName.Add("All", new List<string>());
 
                 while (!string.IsNullOrWhiteSpace(stockContent))
                 {
                     StockItem stock = new StockItem(stockContent);
-
-                    if (!group.TryGetValue(stock.StockID, out List<StockItem> groupId)) //利用Dic去查詢對應的Value，有則把List取出並加入stockitem，沒有則建立List
+                    //利用Dic去查詢對應的Value，有則把List取出並加入stockitem，沒有則建立List
+                    if (!group.TryGetValue(stock.StockID, out List<StockItem> groupId))
                     {
-                        groupId = new List<StockItem>(); //建立Value(List<StockItem>)
-                        group.Add(stock.StockID, groupId);//加入一組Key,Value進入
-                        ColumnName.Add($"{stock.StockID} - {stock.StockName}", new List<string>() { stock.StockID }); //建立一組對照表
-
+                        //建立Value(List<StockItem>)
+                        groupId = new List<StockItem>();
+                        //加入一組Key,Value進入
+                        group.Add(stock.StockID, groupId);
+                        //建立一組對照表
+                        ColumnName.Add($"{stock.StockID} - {stock.StockName}", new List<string>() { stock.StockID });
                     }
 
-                    /////Rank表單建立
+                    //Rank表單建立
                     if (groupSecBroker.TryGetValue(stock.StockID, out Dictionary<string, StockRankItem> secBroker))
                     {
-
                         if (!secBroker.TryGetValue(stock.SecBrokerName, out StockRankItem stockRankItem))
                         {
                             stockRankItem = new StockRankItem(stock.StockName, stock.SecBrokerName, 0);
@@ -75,22 +93,23 @@ namespace Stock_Analysis
                         StockRankItem stockRankItem = new StockRankItem(stock.StockName, stock.SecBrokerName, 0);
                         stockRankItem.setBuyCellOver(stock.BuyQty, stock.CellQty);
                         secBroker.Add(stock.SecBrokerName, stockRankItem);
-                        groupSecBroker.Add(stock.StockID, secBroker);  
+                        groupSecBroker.Add(stock.StockID, secBroker);
                     }
                     groupId.Add(stock);
                     stockContent = sr.ReadLine();
                 }
-
-                ColumnName["All"] = group.Select(data => data.Key).ToList(); //指定一組值到All的Value裡面
-
-                dGV_List.DataSource = group.SelectMany(data => data.Value).ToList(); //資料與dGV_List繫結
-                cbm_stocklist.DataSource = ColumnName.Select(data => data.Key).ToList(); //資料與combobox繫結
+                //指定一組值到All的Value裡面
+                ColumnName["All"] = group.Select(data => data.Key).ToList();
+                //資料與dGV_List繫結
+                dGV_List.DataSource = group.SelectMany(data => data.Value).ToList();
+                //資料與combobox繫結
+                cbm_stocklist.DataSource = ColumnName.Select(data => data.Key).ToList();
             }
             lb_Status.Text = "讀取完成";
         }
 
         /// <summary>
-        /// 按下讀取檔案的觸發事件
+        /// 觸發讀取檔案的觸發事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -120,6 +139,7 @@ namespace Stock_Analysis
             }
         }
 
+        /// <summary>
         /// 按下按鈕開始搜尋，判定搜尋條件，並建立清單
         /// </summary>
         /// <param name="sender"></param>
@@ -163,7 +183,6 @@ namespace Stock_Analysis
         {
             stopwatch.Restart();//開始計時
 
-
             if (!ColumnName.TryGetValue(cbm_stocklist.Text, out List<string> allStockId))
             {
                 //單筆.多筆股票查詢
@@ -175,7 +194,6 @@ namespace Stock_Analysis
                 stockRanklist_dt.AddRange(groupSecBroker[stock].Select(data => data.Value).ToList());
             }
 
-
             sortRank();
             log_time("買賣超Top50");
         }
@@ -184,7 +202,7 @@ namespace Stock_Analysis
         /// Top50資料排序
         /// </summary>
         private void sortRank()
-        {
+        {   //減少排序方式，待修改
             List<StockRankItem> ranklist = new List<StockRankItem>();
             stockRanklist_dt.Sort((x, y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
             if (stockRanklist_dt[0].BuyCellOver > 0) //BuyCellOver大到小排序，最大值小於零，不排
@@ -217,6 +235,10 @@ namespace Stock_Analysis
             dGV_StockRank.DataSource = ranklist;
         }
 
+        /// <summary>
+        /// 紀錄Log資訊
+        /// </summary>
+        /// <param name="message">輸入要建立階段的文字</param>
         private void log_time(string message) //筆記!!!
         {
             stopwatch.Stop();

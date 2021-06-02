@@ -12,6 +12,11 @@ namespace Stock_Analysis
         public int BuyCellOver { get; set; }
         public int SecBrokerCnt { get; set; }
 
+        /// <summary>
+        /// 根據股票代號，整理對應的資訊
+        /// </summary>
+        /// <param name="stockID">傳入股票代號</param>
+        /// <returns></returns>
         public StockInformation getInformation(List<StockItem> stockID)
         {
             StockID = stockID[0].StockID;

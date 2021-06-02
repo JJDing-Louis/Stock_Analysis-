@@ -8,6 +8,12 @@
         private int BuyTotal { get; set; }
         private int CellTotal { get; set; }
 
+        /// <summary>
+        /// 建構子
+        /// </summary>
+        /// <param name="stockname">股票名稱</param>
+        /// <param name="secbrokername">券商名稱</param>
+        /// <param name="buycellover">買賣超</param>
         public StockRankItem(string stockname, string secbrokername, int buycellover)
         {
             StockName = stockname;
