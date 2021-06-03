@@ -205,33 +205,25 @@ namespace Stock_Analysis
         {   //減少排序方式，待修改
             List<StockRankItem> ranklist = new List<StockRankItem>();
             stockRanklist_dt.Sort((x, y) => -x.BuyCellOver.CompareTo(y.BuyCellOver));
-            if (stockRanklist_dt[0].BuyCellOver > 0) //BuyCellOver大到小排序，最大值小於零，不排
+            int index_p = stockRanklist_dt.FindIndex(data => data.BuyCellOver < 0); //開始轉負數的index
+            int index_n = stockRanklist_dt.FindLastIndex(data => data.BuyCellOver >= 0); //最後一個大於零的index
+            if (index_n > 50)
             {
-                int index = stockRanklist_dt.FindIndex(data => data.BuyCellOver < 0);
-                if (index > 50)
-                {
-                    ranklist.AddRange(stockRanklist_dt.GetRange(0, 50));
-                }
-                else
-                {
-                    ranklist.AddRange(stockRanklist_dt);
-                }
+                ranklist.AddRange(stockRanklist_dt.GetRange(0, 50));
             }
-            stockRanklist_dt.Sort((x, y) => x.BuyCellOver.CompareTo(y.BuyCellOver));
-            if (stockRanklist_dt[0].BuyCellOver < 0) //BuyCellOver小到大排序，最大值大於零，不排
+            else { ranklist.AddRange(stockRanklist_dt.GetRange(0, index_n)); }
+            List<StockRankItem> buffer = stockRanklist_dt.GetRange(index_p, (stockRanklist_dt.Count - index_p));
+            buffer.Reverse();
+            if (buffer.Count > 0)
             {
-                int index = stockRanklist_dt.FindIndex(data => data.BuyCellOver > 0);
-                if (index > 50)
-                {
-                    ranklist.AddRange(stockRanklist_dt.GetRange(0, 50));
-                }
-                else
-                {
-                    ranklist.AddRange(stockRanklist_dt);
-                }
+                ranklist.AddRange(buffer.GetRange(0, 50));
             }
+            else
+            {
+                ranklist.AddRange(buffer);
+            }
+            int num3 = ranklist.Count;
 
-            //MessageBox.Show($"{ranklist.Count}");
             dGV_StockRank.DataSource = ranklist;
         }
 

@@ -10,6 +10,7 @@
         ///Sec
         /// </summary>
         public string DealDate { get; }
+
         public string StockID { get; }
         public string StockName { get; }
         public string SecBrokerID { get; }
@@ -18,6 +19,7 @@
         /// 87逆
         /// </summary>
         public string SecBrokerName { get; }
+
         public string Price { get; }
         public string BuyQty { get; }
         public string CellQty { get; }
